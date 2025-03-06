@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+<html lang="en" class="h-100" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>USB Token Settings</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+
+<body class="d-flex h-100 text-center">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header>
+            <div class="container py-4">
+                <h1 class="display-5">USB Token Configuration</h1>
+                <p class="lead">Configure your USB token settings to ensure secure access and signing of documents. Make sure the token is properly installed and selected before proceeding.</p>
+            </div>
+        </header>
+
+        <main class="px-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Token Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <form id="tokenForm" onsubmit="return false;">
+                        <div class="mb-3">
+                            <label for="usbToken" class="form-label">Select USB Token:</label>
+                            <select id="usbToken" class="form-select form-select-sm" required>
+                                <option value="">-- Select Token --</option>
+                                <option value="ePass2003">ePass2003</option>
+                                <option value="WD_PROXKEY">WD_PROXKEY</option>
+                                <option value="Egypt Trust">Egypt Trust</option>
+                                <option value="SoftHSM2">SoftHSM2</option>
+                            </select>
+                            <div id="driverInfo" class="form-text mt-1">
+                                Driver: <span id="expectedDriver" class="fw-bold">Please select a token</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pin" class="form-label">Enter PIN:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="password" class="form-control" id="pin" 
+                                       placeholder="Enter PIN" required minlength="4">
+                                <button class="btn btn-outline-secondary" type="button" 
+                                        onclick="togglePinVisibility()">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-end mt-4">
+                            <button class="btn btn-primary" type="submit" 
+                                    onclick="testConnection()">Test Connection</button>
+                        </div>
+                        <div id="certInfo" class="mt-4 d-none">
+                            <hr />
+                            <div class="mb-2">
+                                <label class="form-label fw-bold">Certificate Information:</label>
+                                <textarea class="form-control" id="certDetails" 
+                                          rows="8" readonly></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="saveSettings" disabled>
+                            <label class="form-check-label" for="saveSettings">
+                                Remember these settings
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-success" 
+                                onclick="saveTokenSettings()" disabled id="saveButton">
+                            <i class="bi bi-save me-1"></i> Save Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-auto py-3">
+            <div class="container text-center">
+                <p class="mb-1">&copy; 2024 USB Token Configuration</p>
+                <p class="text-muted">
+                    <small>For support: <a href="mailto:support@example.com">support@example.com</a></small>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/token-config.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+;
+;FEITIAN Smartcard Minidriver for an x86 and x64 based package.
+;
+
+[Version]
+Signature="$Windows NT$"
+Class=SmartCard
+ClassGuid={990A2BD7-E738-46c7-B26F-1CF8FB9F1391}
+Provider=%ProviderName%
+CatalogFile=eps2003csp11.cat
+DriverVer=02/29/2020,1.0.20.229
+
+[Manufacturer]
+%ProviderName%=Minidriver,NTamd64,NTamd64.6.1,NTx86,NTx86.6.1
+
+[Minidriver.NTamd64]
+%CardDeviceName%=Minidriver64_Install,SCFILTER\CID_8FFB456D-F79B-40ca-983D-A952BC1020C5
+
+[Minidriver.NTx86]
+%CardDeviceName%=Minidriver32_Install,SCFILTER\CID_8FFB456D-F79B-40ca-983D-A952BC1020C5
+
+[Minidriver.NTamd64.6.1]
+%CardDeviceName%=Minidriver64_61_Install,SCFILTER\CID_8FFB456D-F79B-40ca-983D-A952BC1020C5
+
+[Minidriver.NTx86.6.1]
+%CardDeviceName%=Minidriver32_61_Install,SCFILTER\CID_8FFB456D-F79B-40ca-983D-A952BC1020C5
+
+[DefaultInstall]
+CopyFiles=x86_CopyFiles
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[DefaultInstall.ntamd64]
+CopyFiles=amd64_CopyFiles
+CopyFiles=wow64_CopyFiles
+AddReg=AddRegWOW64
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[DefaultInstall.NTx86]
+CopyFiles=x86_CopyFiles
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[DefaultInstall.ntamd64.6.1]
+CopyFiles=amd64_CopyFiles
+CopyFiles=wow64_CopyFiles
+AddReg=AddRegWOW64
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[DefaultInstall.NTx86.6.1]
+CopyFiles=x86_CopyFiles
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[Uninstall]
+DelFiles = x86_CopyFiles, Syswow64_CopyFiles,amd64_CopyFiles,wow64_CopyFiles
+DelReg = AddRegDefault,AddRegWOW64
+
+[SourceDisksFiles]
+eps2003csp1164.dll=1
+eps2003csp11.dll=1
+
+[SourceDisksNames]
+1 = %MediaDescription%
+
+[Minidriver64_Install.NT]
+CopyFiles=amd64_CopyFiles
+CopyFiles=wow64_CopyFiles
+AddReg=AddRegWOW64
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[Minidriver64_61_Install.NT]
+CopyFiles=amd64_CopyFiles
+CopyFiles=wow64_CopyFiles
+AddReg=AddRegWOW64
+AddReg=AddRegDefault
+Include=umpass.inf
+Needs=UmPass
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[Minidriver32_Install.NT]
+CopyFiles=x86_CopyFiles
+AddReg=AddRegDefault
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[Minidriver32_61_Install.NT]
+CopyFiles=x86_CopyFiles
+AddReg=AddRegDefault
+Include=umpass.inf
+Needs=UmPass
+AddProperty=AddPropertyDeviceStage
+AddReg=PingBi_AddReg
+
+[Minidriver32_Install.NT.Services]
+AddService = UMPass, 0x00000002, UMPassService_Install_Vista32
+
+[UMPassService_Install_Vista32]
+;DO NOT MODIFY - UmPass is shared by other devices; DisplayName    = %UmPass.SVCDESC%     ; Friendly Name of the Service
+ServiceType    = 1                    ; SERVICE_KERNEL_DRIVER
+StartType      = 3                    ; SERVICE_DEMAND_START 
+ErrorControl   = 1                    ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\umpass.sys
+LoadOrderGroup = Extended Base
+
+[Minidriver64_Install.NT.Services]
+AddService = UMPass, 0x00000002, UMPassService_Install_Vista64
+
+[UMPassService_Install_Vista64]
+;DO NOT MODIFY - UmPass is shared by other devices; DisplayName    = %UmPass.SVCDESC%     ; Friendly Name of the Service
+ServiceType    = 1                    ; SERVICE_KERNEL_DRIVER
+StartType      = 3                    ; SERVICE_DEMAND_START 
+ErrorControl   = 1                    ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\umpass.sys
+LoadOrderGroup = Extended Base
+
+[Minidriver64_61_Install.NT.Services]
+Include=umpass.inf
+Needs=UmPass.Services
+
+
+[Minidriver32_61_Install.NT.Services]
+Include=umpass.inf
+Needs=UmPass.Services
+
+
+[Minidriver64_61_Install.NT.HW]
+Include=umpass.inf
+Needs=UmPass.HW
+AddReg=AddRegAutoPlay
+
+[Minidriver64_61_Install.NT.CoInstallers]
+Include=umpass.inf
+Needs=UmPass.CoInstallers
+
+
+[Minidriver64_61_Install.NT.Interfaces]
+Include=umpass.inf
+Needs=UmPass.Interfaces
+
+
+[Minidriver32_61_Install.NT.HW]
+Include=umpass.inf
+Needs=UmPass.HW
+AddReg=AddRegAutoPlay
+
+[Minidriver32_61_Install.NT.CoInstallers]
+Include=umpass.inf
+Needs=UmPass.CoInstallers
+
+[Minidriver32_61_Install.NT.Interfaces]
+Include=umpass.inf
+Needs=UmPass.Interfaces
+
+
+[amd64_CopyFiles]
+eps2003csp11.dll,eps2003csp1164.dll
+
+[x86_CopyFiles]
+eps2003csp11.dll
+
+[wow64_CopyFiles]
+eps2003csp11.dll
+
+[PingBi_AddReg]
+HKLM,"SYSTEM\CurrentControlSet\Control\DeviceOverrides\USB#VID_096E&PID_0807\LocationPaths\*","Removable",0x10001,00,00,00,00  
+
+
+[AddRegWOW64]
+HKLM, %SmartCardNameWOW64%,ATR,0x00000001    ,3b,9f,95,81,31,fe,9f,00,66,46,53,05,00,00,00,71,df,00,00,00,00,00,00                       
+HKLM, %SmartCardNameWOW64%,ATRMask,0x00000001,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,00,00,ff,ff,ff,ff,ff,ff,ff,00                   
+HKLM, %SmartCardNameWOW64%,"Crypto Provider",0x00000000,"Microsoft Base Smart Card Crypto Provider"              
+HKLM, %SmartCardNameWOW64%,"Smart Card Key Storage Provider",0x00000000,"Microsoft Smart Card Key Storage Provider"
+HKLM, %SmartCardNameWOW64%,"80000001",0x00000000,%SmartCardCardModule%                                             
+
+[AddRegDefault]
+HKLM, %SmartCardName%,ATR,0x00000001    ,3b,9f,95,81,31,fe,9f,00,66,46,53,05,00,00,00,71,df,00,00,00,00,00,00
+HKLM, %SmartCardName%,ATRMask,0x00000001,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,00,00,ff,ff,ff,ff,ff,ff,ff,00
+HKLM, %SmartCardName%,"Crypto Provider",0x00000000,"Microsoft Base Smart Card Crypto Provider"
+HKLM, %SmartCardName%,"Smart Card Key Storage Provider",0x00000000,"Microsoft Smart Card Key Storage Provider"
+HKLM, %SmartCardName%,"80000001",0x00000000,%SmartCardCardModule%
+HKLM, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\DeviceHandlers\ePass2003ZCHandler\EventHandlers\DeviceArrival","ePass2003ZCArrival",,,
+HKLM, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\ePass2003ZCArrival","ePass2003ZC",,,
+HKLM, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\ePass2003ZC","Action",,"Open Device Stage"
+HKLM, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\ePass2003ZC","Provider",,"Autoplay Handler"
+HKLM, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\ePass2003ZC","CLSID",,"{CE873F6C-01D6-4e76-ADAC-1D26F81873F6}"
+
+; for autoplay
+; add PKEY_DeviceDisplay_LaunchDeviceStageOnDeviceConnect = (bool)1
+[AddPropertyDeviceStage]
+{78c34fc8-104a-4aca-9ea4-524d52996e57},76,17,,1
+{78c34fc8-104a-4aca-9ea4-524d52996e57},77,17,,1
+;{78c34fc8-104a-4aca-9ea4-524d52996e57},78,13,,17,d8,02,87,ad,5a,74,46,9e,f3,4d,3d,ec,d8,71,20
+
+[AddRegAutoPlay]
+HKR,,Label,,%AutoPlayLabel%
+HKR,,DeviceHandlers,,"ePass2003ZCHandler"
+HKR,,Icons,0x00010000,"%systemroot%\system32\setupapi.dll,-25"
+
+[DestinationDirs]
+amd64_CopyFiles=10,system32
+x86_CopyFiles=10,system32
+wow64_CopyFiles=10,syswow64
+
+[FriendlyName]
+ScFriendlyName="ePass2003"
+
+; =================== Generic ==================================
+
+[Strings]
+ProviderName ="EnterSafe"
+MediaDescription="EnterSafe Smart Card Minidriver Installation Disk"
+CardDeviceName="ePass2003 Mini-driver"
+SmartCardName="SOFTWARE\Microsoft\Cryptography\Calais\SmartCards\ePass2003"
+SmartCardNameWOW64="SOFTWARE\Wow6432Node\Microsoft\Cryptography\Calais\SmartCards\ePass2003"
+SmartCardCardModule="eps2003csp11.dll"
+AutoPlayLabel="ePass2003"
+umpass.SVCDESC = "Microsoft UMPass Driver"

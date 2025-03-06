@@ -1,0 +1,580 @@
+﻿@model EgyptEGS.Models.SetupViewModel
+
+@{
+    ViewData["Title"] = "Setup Wizard";
+}
+
+<div class="container-fluid setup-container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Egypt Integration Setup</h2>
+        </div>
+    </div>
+
+    <form id="certInfoForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Referrer" value="@Model.Referrer" />
+        <input type="hidden" name="BusinessDetailsJson" value="@Model.BusinessDetailJson" />
+        <input type="hidden" name="Api" value="@Model.Api" />
+        <input type="hidden" name="Token" value="@Model.Token" />
+
+        <div class="col-md-12 mb-4">
+            <div class="card card-custom">
+                <div class="card-header section-header">
+                    <h5 class="mb-0">Business Data Setup</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">This section helps you create or update custom fields and footers for Egypt Integration.</p>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" id="backToManager" class="btn btn-secondary btn-sm" style="width: 200px; margin-right: 10px;" name="backToManager" onclick="window.location.href='@Model.Referrer'">Back to Manager</button>
+                        <button type="button" id="generateCustomField" class="btn btn-primary btn-sm" style="width: 200px;">Update Business Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+
+            <ul class="nav nav-tabs" id="setupTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="business-tab" data-bs-toggle="tab" data-bs-target="#business" type="button" role="tab">
+                        Business Information
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="integration-tab" data-bs-toggle="tab" data-bs-target="#integration" type="button" role="tab">
+                        Integration Setup
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content pt-2" id="setupTabsContent">
+                <div class="tab-pane fade show active" id="business" role="tabpanel">
+
+                    <div class="card card-custom">
+                        <div class="card-body py-4">
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Type">Issuer Type</label>
+                                                <select asp-for="@Model.AppConfig.Issuer.Type" class="form-control form-control-sm">
+                                                    @foreach (var value in Enum.GetValues(typeof(EgyptEGS.ApiClient.Model.PartyType)))
+                                                    {
+                                                        <option value="@value">@value</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Id">Issuer ID (Tax RIN)</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Id" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.ActivityCode">Activity Code</label>
+                                                <input asp-for="@Model.AppConfig.ActivityCode" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Name">Issuer Name (Tax Registration Name)</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Name" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.BranchId">BranchID Number</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.BranchId" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Country">Country Code</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Country" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Governate">Governate</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Governate" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.RegionCity">Region/City</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.RegionCity" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Street">Street</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Street" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.BuildingNumber">Building Number</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.BuildingNumber" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.PostalCode">Postal Code</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.PostalCode" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Floor">Floor</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Floor" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Room">Room</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Room" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.Landmark">Landmark</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.Landmark" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.Issuer.Address.AdditionalInformation">Additional Information</label>
+                                                <input asp-for="@Model.AppConfig.Issuer.Address.AdditionalInformation" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="integration" role="tabpanel">
+                    <div class="card card-custom">
+
+                        <div class="card-body py-4">
+
+                            <div class="row">
+
+
+                               <div class="col-md-6 border-1">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i>
+                                        Digital signature is not for Invoice v0.9
+                                    </div>
+                                    <div class="row opacity-50">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.SignServiceUrl">Signature Services URL</label>
+                                                <div class="input-group">
+                                                    <input asp-for="@Model.AppConfig.SignServiceUrl" class="form-control form-control-sm" disabled />
+                                                    <button type="button" id="fetchCertificateDetails" class="btn btn-primary btn-sm" disabled>
+                                                        <i class="fas fa-sync"></i> Fetch Certificate Details
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label">Certificate Subject</label>
+                                                <textarea id="certSubject" class="form-control form-control-sm" rows="3" readonly disabled></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label">Organization Identifier</label>
+                                                <input type="text" id="organizationIdentifier" class="form-control form-control-sm" readonly disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label">Valid To</label>
+                                                <input type="text" id="certValidTo" class="form-control form-control-sm" readonly disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label">Ready for Signing</label>
+                                                <input type="text" id="readyForSigning" class="form-control form-control-sm" readonly disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6 border-1">
+
+                                    <div class="row">
+
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.IntegrationType">Integration Type</label>
+                                                <select asp-for="@Model.AppConfig.IntegrationType" class="form-control form-control-sm">
+                                                    @foreach (var value in Enum.GetValues(typeof(EgyptEGS.ApiClient.Model.IntegrationType)))
+                                                    {
+                                                        <option value="@value">@value</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.ClientId">Client ID</label>
+                                                <input asp-for="@Model.AppConfig.ClientId" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group text-left">
+                                                <label class="form-label" asp-for="@Model.AppConfig.ClientSecret">Client Secret</label>
+                                                <input asp-for="@Model.AppConfig.ClientSecret" class="form-control form-control-sm" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <div class="d-flex justify-content-end">
+                                                <button type="button" id="checkClientIdAndSecret" class="btn btn-primary btn-sm" disabled>
+                                                    <i class="fas fa-check"></i> Check Client ID and Secret
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <hr />
+
+                            <div class="col-md-12 text-center">
+                                <button type="submit" id="saveIntegrationConfig" class="btn btn-primary btn-sm" style="width: 200px;" disabled>
+                                    <i class="fas fa-save"></i> Save Integration Config
+                                </button>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Add this right after jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@section Scripts {
+    <script>
+        $(document).ready(async function() {
+            let isCredentialsValid = false;
+
+            // Message handling functions
+            async function showSuccessMessage(message) {
+                return await Swal.fire({
+                    title: 'Success!',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            async function showErrorMessage(message) {
+                return await Swal.fire({
+                    title: 'Error!',
+                    text: message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            function showLoading(message = 'Processing...') {
+                Swal.fire({
+                    title: message,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+
+            function hideLoading() {
+                Swal.close();
+            }
+
+            // Validation functions
+            function validateRequiredFields() {
+                return $("#AppConfig_Issuer_Type").val() &&
+                    $("#AppConfig_Issuer_Id").val() &&
+                    $("#AppConfig_ActivityCode").val() &&
+                    $("#AppConfig_Issuer_Name").val() &&
+                    $("#AppConfig_Issuer_Address_BranchId").val() &&
+                    $("#AppConfig_ClientId").val() &&
+                    $("#AppConfig_ClientSecret").val();
+            }
+
+            function validateClientCredentials() {
+                return $("#AppConfig_ClientId").val() &&
+                    $("#AppConfig_ClientSecret").val() &&
+                    $("#AppConfig_Issuer_Id").val();
+            }
+
+            /* Certificate validation disabled for v0.9
+            function validateCertificateInfo() {
+                return $("#certSubject").val() &&
+                    $("#organizationIdentifier").val() &&
+                    $("#readyForSigning").val() &&
+                    $("#certValidTo").val();
+            }
+
+            function clearCertificateData() {
+                $("#certSubject, #readyForSigning, #certValidTo, #organizationIdentifier").val('');
+                $("#AppConfig_Certificate").val('');
+                $("#saveIntegrationConfig").prop('disabled', true);
+            }
+            */
+
+            // Event Handlers
+            $("#generateCustomField").off('click').on('click', async function() {
+                try {
+                    //showLoading('Updating business data...');
+                    const apiEndpoint = '@Model.Api';
+                    const secretKey = '@Html.Raw(@Model.Token)';
+
+                    if (!apiEndpoint || !secretKey) {
+                        throw new Error('API Endpoint or Token is missing!');
+                    }
+
+                    const response = await fetch('setup/getcfdata');
+                    if (!response.ok) throw new Error('Failed to fetch data');
+
+                    const jsonData = await response.json();
+                    let successCount = 0, failureCount = 0;
+
+                    for (const [key, items] of Object.entries(jsonData)) {
+                        for (const item of items) {
+                            try {
+                                const apiResponse = await fetch(`${apiEndpoint}/${key}/key/${encodeURIComponent(item.Key)}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${secretKey}`
+                                    },
+                                    body: JSON.stringify(item)
+                                });
+
+                                if (apiResponse.ok) successCount++;
+                                else failureCount++;
+                            } catch {
+                                failureCount++;
+                            }
+                        }
+                    }
+                    await showSuccessMessage(`${successCount} successful, ${failureCount} failed.`);
+                } catch (error) {
+                    await showErrorMessage(error.message);
+                } finally {
+                    hideLoading();
+                }
+            });
+
+            $("#fetchCertificateDetails").off('click').on('click', async function() {
+                try {
+                    const baseUrl = $("#AppConfig_SignServiceUrl").val();
+                    if (!baseUrl) throw new Error('Please enter Signature Services URL');
+
+                    //showLoading('Fetching certificate details...');
+
+                    const response = await fetch(`${baseUrl}/getcert`);
+                    if (!response.ok) throw new Error('Failed to get certificate details');
+
+                    const certData = await response.json();
+                    if (!certData) throw new Error('Invalid certificate data received');
+
+                    $("#certSubject").val(certData.subject || certData.Subject || '');
+                    const isReadyForSigning = certData.validFrom && certData.validTo ?
+                        (new Date(certData.validFrom) <= new Date() && new Date(certData.validTo) >= new Date()) : false;
+                    $("#readyForSigning").val(isReadyForSigning ? "Yes" : "No");
+                    $("#certValidTo").val(certData.validTo || certData.ValidTo || '');
+                    $("#organizationIdentifier").val(certData.organizationIdentifier || certData.OrganizationIdentifier || '');
+                    //$("#saveIntegrationConfig").prop('disabled', !(validateRequiredFields() && isCredentialsValid));
+                } catch (error) {
+                    await showErrorMessage(error.message);
+                    clearCertificateData();
+                } finally {
+                    hideLoading();
+                }
+            });
+
+            $("#checkClientIdAndSecret").off('click').on('click', async function() {
+                try {
+                    if (!validateClientCredentials()) {
+                        throw new Error('Please enter both Client ID and Client Secret');
+                    }
+
+                    showLoading('Verifying credentials...');
+                    const response = await $.ajax({
+                        url: '/Setup/GetAccessToken',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            integrationType: $("#AppConfig_IntegrationType").val(),
+                            clientId: $("#AppConfig_ClientId").val(),
+                            clientSecret: $("#AppConfig_ClientSecret").val()
+                        })
+                    });
+
+                    if (!response.success) throw new Error(response.message || 'Verification failed');
+
+                    const tokenData = JSON.parse(response.data);
+                    const payload = JSON.parse(atob(tokenData.access_token.split('.')[1]));
+                    const taxRin = payload.TaxRin;
+                    const issuerId = $("#AppConfig_Issuer_Id").val();
+
+                    if (taxRin !== issuerId) {
+                        throw new Error(`TaxRin from token (${taxRin}) does not match Issuer ID (${issuerId})`);
+                    }
+
+                    await showSuccessMessage("Connection successful!");
+                    isCredentialsValid = true;
+                    $("#saveIntegrationConfig").prop('disabled', !validateRequiredFields());
+                    //$("#saveIntegrationConfig").prop('disabled', !validateCertificateInfo());
+                    $("#checkClientIdAndSecret").prop('disabled', true);
+                } catch (error) {
+                    await showErrorMessage(error.message);
+                    isCredentialsValid = false;
+                    $("#checkClientIdAndSecret").prop('disabled', false);
+                } finally {
+                    hideLoading();
+                }
+            });
+
+            $("#saveIntegrationConfig").off('click').on('click', async function(e) {
+                e.preventDefault();
+                try {
+                    
+                    //showLoading('Saving configuration...');
+                    const appConfig = {
+                        IntegrationType: $("#AppConfig_IntegrationType").val(),
+                        ClientId: $("#AppConfig_ClientId").val(),
+                        ClientSecret: $("#AppConfig_ClientSecret").val(),
+                        SignServiceUrl: decodeURIComponent($("#AppConfig_SignServiceUrl").val()),
+                        ActivityCode: $("#AppConfig_ActivityCode").val(),
+                        Issuer: {
+                            Type: $("#AppConfig_Issuer_Type").val(),
+                            Id: $("#AppConfig_Issuer_Id").val(),
+                            Name: $("#AppConfig_Issuer_Name").val(),
+                            Address: {
+                                BranchId: $("#AppConfig_Issuer_Address_BranchId").val(),
+                                Country: $("#AppConfig_Issuer_Address_Country").val(),
+                                Governate: $("#AppConfig_Issuer_Address_Governate").val(),
+                                RegionCity: $("#AppConfig_Issuer_Address_RegionCity").val(),
+                                Street: $("#AppConfig_Issuer_Address_Street").val(),
+                                BuildingNumber: $("#AppConfig_Issuer_Address_BuildingNumber").val(),
+                                PostalCode: $("#AppConfig_Issuer_Address_PostalCode").val(),
+                                Floor: $("#AppConfig_Issuer_Address_Floor").val(),
+                                Room: $("#AppConfig_Issuer_Address_Room").val(),
+                                Landmark: $("#AppConfig_Issuer_Address_Landmark").val(),
+                                AdditionalInformation: $("#AppConfig_Issuer_Address_AdditionalInformation").val()
+                            }
+                        }
+                    };
+
+                    const formData = new FormData();
+                    formData.append('appConfigJson', JSON.stringify(appConfig));
+                    formData.append('Referrer', $('input[name="Referrer"]').val());
+                    formData.append('BusinessDetailsJson', $('input[name="BusinessDetailsJson"]').val());
+                    formData.append('Api', $('input[name="Api"]').val());
+                    formData.append('Token', $('input[name="Token"]').val());
+
+                    const response = await $.ajax({
+                        url: '/Setup/UpdateBusinessDetail',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    const apiDetails = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (!apiDetails.ApiBusinessDetails) throw new Error('Invalid response structure');
+
+                    const { ApiUrl, SecretKey, Payload } = apiDetails.ApiBusinessDetails;
+                    const apiResponse = await fetch(ApiUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${SecretKey}`
+                        },
+                        body: Payload
+                    });
+
+                    if (!apiResponse.ok) {
+                        const errorText = await apiResponse.text();
+                        throw new Error(`API Error: ${errorText}`);
+                    }
+
+                    await showSuccessMessage('Configuration saved successfully!');
+                    window.location.href = $('input[name="Referrer"]').val();
+                } catch (error) {
+                    await showErrorMessage(error.message);
+                } finally {
+                    hideLoading();
+                }
+            });
+
+            // Form field event handlers
+            $("#AppConfig_ClientId, #AppConfig_ClientSecret, #AppConfig_Issuer_Id").on('input change', function() {
+                isCredentialsValid = false;
+                $("#checkClientIdAndSecret").prop('disabled', !validateClientCredentials());
+                $("#saveIntegrationConfig").prop('disabled', true);
+            });
+
+            /* Certificate related events disabled for v0.9
+            $("#certSubject, #readyForSigning, #certValidTo, #organizationIdentifier").on('change', function() {
+                $("#saveIntegrationConfig").prop('disabled', !(validateRequiredFields() && validateCertificateInfo() && isCredentialsValid));
+            });
+            */
+
+           // Initial validation check
+            $("#checkClientIdAndSecret").prop('disabled', !validateClientCredentials());
+            $("#saveIntegrationConfig").prop('disabled', !validateRequiredFields() || !isCredentialsValid);
+        });
+    </script>
+}
+
+

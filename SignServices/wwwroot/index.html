@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Token Signing Test</title>
+        <style>
+            :root {
+                --primary-color: #2563eb;
+                --primary-hover: #1d4ed8;
+                --success-color: #16a34a;
+                --error-color: #dc2626;
+                --border-color: #e5e7eb;
+                --text-color: #1f2937;
+                --bg-color: #ffffff;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: system-ui, -apple-system, sans-serif;
+                line-height: 1.5;
+                color: var(--text-color);
+                background-color: #f3f4f6;
+                padding: 2rem;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background-color: var(--bg-color);
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                font-size: 1.875rem;
+                font-weight: 600;
+                margin-bottom: 2rem;
+                color: var(--text-color);
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 0.25rem;
+                font-weight: 500;
+                font-size: 0.875rem;
+                color: var(--text-color);
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                width: 100%;
+                padding: 0.5rem;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                font-size: 0.875rem;
+                transition: border-color 0.15s ease;
+            }
+
+            input[type="text"]:focus,
+            input[type="password"]:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            }
+
+            button {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 0.5rem 1.5rem;
+                border: none;
+                border-radius: 6px;
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background-color 0.15s ease;
+            }
+
+            button:hover {
+                background-color: var(--primary-hover);
+            }
+
+            button:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+.button-group {
+                display: flex;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            textarea#response {
+                width: 100%;
+                min-height: 200px;
+                max-height: 400px;
+                padding: 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                font-family: 'Consolas', monospace;
+                font-size: 0.875rem;
+                background-color: #f8fafc;
+                resize: vertical;
+                overflow-x: auto;
+                overflow-y: auto;
+                margin-top: 2rem;
+                white-space: pre;
+                word-wrap: normal;
+            }
+
+            textarea#response.success {
+                border-color: var(--success-color);
+                background-color: #f0fdf4;
+            }
+
+            textarea#response.error {
+                border-color: var(--error-color);
+                background-color: #fef2f2;
+            }
+            
+            .loading {
+                position: relative;
+                pointer-events: none;
+            }
+
+            .loading::after {
+                content: "";
+                position: absolute;
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid #ffffff;
+                border-radius: 50%;
+                border-top-color: transparent;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                animation: spin 0.6s linear infinite;
+            }
+
+            @keyframes spin {
+                to { transform: translateY(-50%) rotate(360deg); }
+            }
+
+            @media (max-width: 640px) {
+                body {
+                    padding: 1rem;
+                }
+
+                .container {
+                    padding: 1.5rem;
+                }
+
+                .button-group {
+                    flex-direction: column;
+                }
+
+                button {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Token Signing Test</h1>
+            
+            <div class="form-group">
+                <label for="driverPath">Driver Path</label>
+                <input type="text" id="driverPath" value="D:\SoftHSM2\lib\softhsm2-x64.dll" placeholder="Enter driver path">
+            </div>
+            
+            <div class="form-group">
+                <label for="pin">PIN</label>
+                <input type="password" id="pin" placeholder="Enter PIN">
+            </div>
+
+            <div class="form-group">
+                <label for="serializedInvoice">Serialized String</label>
+                <input type="text" id="serializedInvoice" value="test123" placeholder="Enter invoice hash">
+            </div>
+            
+            <div class="button-group">
+                <button onclick="testDriver()" id="testBtn">Test Driver Connection</button>
+                <button onclick="signDocument()" id="signBtn">Sign Document</button>
+                <button onclick="signDocument2()" id="signBtn2">Sign CMS Document</button>
+            </div>
+
+            <div class="form-group">
+                <label for="response">Response</label>
+                <textarea id="response" readonly wrap="off" rows="10"></textarea>
+            </div>
+            
+        </div>
+
+        <script>
+            const testBtn = document.getElementById('testBtn');
+            const signBtn = document.getElementById('signBtn');
+            const signBtn2 = document.getElementById('signBtn2');
+            const responseArea = document.getElementById('response'); // Changed name to better reflect element type
+
+            function setLoading(button, isLoading) {
+                button.disabled = isLoading;
+                button.classList.toggle('loading', isLoading);
+            }
+
+            window.addEventListener('load', () => {
+                responseArea.value = 'Ready to test connection.'; // Changed from textContent to value
+            });
+
+            async function testDriver() {
+                const driverPath = document.getElementById('driverPath').value.trim();
+                const pin = document.getElementById('pin').value.trim();
+
+                if (!driverPath || !pin) {
+                    responseArea.className = 'error';
+                    responseArea.value = 'Error: Driver path and PIN are required'; // Changed from textContent to value
+                    return;
+                }
+
+                try {
+                    setLoading(testBtn, true);
+                    responseArea.className = '';
+                    responseArea.value = 'Testing driver connection...'; // Changed from textContent to value
+
+                    const response = await fetch(`/setting?driverPath=${encodeURIComponent(driverPath)}&pin=${encodeURIComponent(pin)}`);
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to test driver connection');
+                    }
+
+                    responseArea.className = 'success';
+                    responseArea.value = JSON.stringify(data, null, 2); // Changed from textContent to value
+                } catch (error) {
+                    responseArea.className = 'error';
+                    responseArea.value = `Error: ${error.message}`; // Changed from textContent to value
+                } finally {
+                    setLoading(testBtn, false);
+                }
+            }
+
+            async function signDocument() {
+                const pin = document.getElementById('pin').value.trim();
+                const serializedInvoice = document.getElementById('serializedInvoice').value.trim();
+
+                if (!pin || !serializedInvoice) {
+                    responseArea.className = 'error';
+                    responseArea.value = 'Error: PIN and Invoice Hash are required'; // Changed from textContent to value
+                    return;
+                }
+
+                try {
+                    setLoading(signBtn, true);
+                    responseArea.className = '';
+                    responseArea.value = 'Signing document...'; // Changed from textContent to value
+
+                    const response = await fetch('/sign', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ pin, serializedInvoice })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to sign document');
+                    }
+
+                    responseArea.className = 'success';
+                    function formatResponse(data) {
+                                try {
+                                    // If data is already an object, stringify it, otherwise parse and re-stringify
+                                    const obj = typeof data === 'object' ? data : JSON.parse(data);
+                                    return JSON.stringify(obj, null, 4); // Using 4 spaces for indentation
+                                } catch {
+                                    // If not JSON, return as-is
+                                    return data;
+                                }
+                            }
+
+                            // Update in testDriver and signDocument functions:
+                            responseArea.value = formatResponse(data);
+                    responseArea.value = JSON.stringify(data, null, 2); // Changed from textContent to value
+                } catch (error) {
+                    responseArea.className = 'error';
+                    responseArea.value = `Error: ${error.message}`; // Changed from textContent to value
+                } finally {
+                    setLoading(signBtn, false);
+                }
+            }
+
+
+            async function signDocument2() {
+                const pin = document.getElementById('pin').value.trim();
+                const serializedInvoice = document.getElementById('serializedInvoice').value.trim();
+
+                if (!pin || !serializedInvoice) {
+                    responseArea.className = 'error';
+                    responseArea.value = 'Error: PIN and Invoice Hash are required'; // Changed from textContent to value
+                    return;
+                }
+
+                try {
+                    setLoading(signBtn2, true);
+                    responseArea.className = '';
+                    responseArea.value = 'Signing document...'; // Changed from textContent to value
+
+                    const response = await fetch('/sign2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ pin, serializedInvoice })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to sign document');
+                    }
+
+                    responseArea.className = 'success';
+                    function formatResponse(data) {
+                        try {
+                            // If data is already an object, stringify it, otherwise parse and re-stringify
+                            const obj = typeof data === 'object' ? data : JSON.parse(data);
+                            return JSON.stringify(obj, null, 4); // Using 4 spaces for indentation
+                        } catch {
+                            // If not JSON, return as-is
+                            return data;
+                        }
+                    }
+
+                    // Update in testDriver and signDocument functions:
+                    responseArea.value = formatResponse(data);
+                    responseArea.value = JSON.stringify(data, null, 2); // Changed from textContent to value
+                } catch (error) {
+                    responseArea.className = 'error';
+                    responseArea.value = `Error: ${error.message}`; // Changed from textContent to value
+                } finally {
+                    setLoading(signBtn2, false);
+                }
+            }
+
+
+
+        </script>
+
+        
+    </body>
+</html>

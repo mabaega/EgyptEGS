@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signature</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .popup.active {
+                display: block;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="showPopup()">Sign Document</button>
+
+    <div id="signaturePopup" class="popup">
+        <h2>Digital Signature</h2>
+        <div class="form-group">
+            <label for="method">Select Method:</label>
+            <select id="method" onchange="toggleInputs()">
+                <option value="usb">USB Token</option>
+                <option value="pfx">From File (PFX/P12)</option>
+            </select>
+        </div>
+        <div id="usbSection" class="form-group">
+            <label for="usbToken">Select USB Token:</label>
+            <select id="usbToken">
+                <option value="ePass2003">ePass2003</option>
+                <option value="WD_PROXKEY">WD_PROXKEY</option>
+                <option value="Egypt Trust">Egypt Trust</option>
+            </select>
+            <label for="pin">Enter PIN:</label>
+            <input type="password" id="pin" placeholder="Token PIN">
+        </div>
+        <div id="pfxSection" class="form-group" style="display: none;">
+            <label for="pfxFile">Select PFX/P12 File:</label>
+            <input type="file" id="pfxFile" accept=".pfx,.p12" onchange="togglePfxPassword()">
+            <label for="pfxPassword">Enter Password:</label>
+            <input type="password" id="pfxPassword" placeholder="PFX Password">
+        </div>
+        <button onclick="submitForm()">Sign Document</button>
+        <button onclick="closePopup()">Cancel</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        function showPopup() {
+            document.getElementById('signaturePopup').classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('signaturePopup').classList.remove('active');
+        }
+
+        function toggleInputs() {
+            const method = document.getElementById('method').value;
+            if (method === 'usb') {
+                document.getElementById('usbSection').style.display = 'block';
+                document.getElementById('pfxSection').style.display = 'none';
+            } else if (method === 'pfx') {
+                document.getElementById('usbSection').style.display = 'none';
+                document.getElementById('pfxSection').style.display = 'block';
+            }
+        }
+
+        function togglePfxPassword() {
+            const pfxFile = document.getElementById('pfxFile').files[0];
+            document.getElementById('pfxPassword').style.display = pfxFile ? 'block' : 'none';
+        }
+
+        function submitForm() {
+            const method = document.getElementById('method').value;
+            let formData = new FormData();
+
+            if (method === 'usb') {
+                formData.append('UsbToken', document.getElementById('usbToken').value);
+                formData.append('Pin', document.getElementById('pin').value);
+            } else if (method === 'pfx') {
+                formData.append('PfxFile', document.getElementById('pfxFile').files[0]);
+                formData.append('PfxPassword', document.getElementById('pfxPassword').value);
+            }
+
+            formData.append('Document', 'Sample document content');
+
+            fetch('/SignDocument', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result').textContent = data.success ? 'Success: ' + data.message : 'Error: ' + data.message;
+                closePopup();
+            })
+            .catch(error => {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>

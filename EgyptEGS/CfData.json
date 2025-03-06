@@ -1,0 +1,345 @@
+{
+  "text-custom-field-form": [
+    {
+      "Key": "11af5023-10c0-4c7f-9857-f9606b5df8ba",
+      "Name": "WitholdingTax (T4) SubType",
+      "Position": 2,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Type": "DropdownList",
+      "OptionsForDropdownList": "W001\nW002\nW003\nW004\nW005\nW006\nW007\nW008\nW009\nW010\nW011\nW012\nW013\nW014\nW015\nW016",
+      "Size": "Medium",
+      "Description": "https://sdk.invoicing.eta.gov.eg/codes/tax-types/"
+    },
+    {
+      "Key": "1c455f6c-a57e-4596-b9b9-9264eab53340",
+      "Name": "Submission ID",
+      "Position": 5,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "2ebc3b59-e186-4550-9b81-e6d450128bd4",
+      "Name": "Submission Date",
+      "Position": 6,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "c081a493-4113-4bb6-bf2d-91deab7e7e25",
+      "Name": "Document UUID",
+      "Position": 7,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "3510c81b-045a-4aab-9c98-0cb0f7ea6850",
+      "Name": "Document Issued Date",
+      "Position": 8,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "7e9182f1-edab-497d-aafb-7a24ed01c81c",
+      "Name": "Document LongID",
+      "Position": 9,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Large"
+    },
+    {
+      "Key": "c43e2286-91c4-42fd-95f9-ddda74cd91fe",
+      "Name": "Document Submission Status",
+      "Position": 10,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "fc850086-767f-4cf7-a086-cde4208c68ce",
+      "Name": "Public URL",
+      "Description": "<div id='cfActions'><script>document.addEventListener('DOMContentLoaded',function(){const isUpdate=document.querySelector('button.btn.btn-success[onclick=\"ajaxPost(true)\"]')!==null;const customFields=[{label:'WitholdingTax (T4) SubType',actions:['enabled','clear']},{label:'Submission ID',actions:['readonly','clear']},{label:'Submission Date',actions:['readonly','clear']},{label:'Document UUID',actions:['readonly','clear']},{label:'Document Issued Date',actions:['readonly','clear']},{label:'Document LongID',actions:['readonly','hide','clear']},{label:'Document Submission Status',actions:['readonly','clear']},{label:'Public URL',actions:['readonly','hide','clear']}];const disableDateAndReference=()=>{const dateInput=document.querySelector('.mx-input');if(dateInput){dateInput.disabled=true;const calendarIcon=document.querySelector('.mx-icon-calendar');if(calendarIcon){calendarIcon.style.pointerEvents='none';calendarIcon.style.opacity='0.5';}}const checkbox=document.querySelector('.input-group-addon input[type=\"checkbox\"]');const inputText=document.querySelector('.input-group input[type=\"text\"]');if(inputText.value!==''){if(checkbox&&inputText){try{if(typeof app!=='undefined'){app.AutomaticReference=false;}checkbox.checked=false;checkbox.disabled=true;inputText.disabled=true;}catch(error){}}}};const processCustomFields=()=>{if(!isUpdate&&app?.CustomFields2?.Strings){Object.keys(app.CustomFields2.Strings).forEach(uuid=>{app.CustomFields2.Strings[uuid]='';});}customFields.forEach(field=>{const customField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()===field.label);if(!customField)return;const input=customField.querySelector('input, textarea');if(!isUpdate&&field.actions.includes('clear')&&input)input.value='';if(field.actions.includes('readonly')&&input)input.setAttribute('readonly','true');if(field.actions.includes('hide'))customField.style.display='none';if(field.actions.includes('enabled')&&input)input.disabled=false;});};const generateAutoDate=()=>{if(!isUpdate&&app?.CustomFields2?.Strings){const now=new Date();const localDatetime=new Date(now.getTime()-(now.getTimezoneOffset()*60000));const currentDateTime=localDatetime.toISOString().slice(0,19).replace('T',' ');const issuedDateUuid='3510c81b-045a-4aab-9c98-0cb0f7ea6850';if(app.CustomFields2.Strings.hasOwnProperty(issuedDateUuid)){app.CustomFields2.Strings[issuedDateUuid]=currentDateTime;}const documentIssuedDateField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()==='Document Issued Date');if(documentIssuedDateField){const input=documentIssuedDateField.querySelector('input');if(input){input.value=currentDateTime;input.disabled=true;}}}};const disableUpdateButtonIfInvalidStatus=()=>{if(!isUpdate)return;const statusField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()==='Document Submission Status');if(!statusField)return;const statusInput=statusField.querySelector('input, textarea');const updateButton=document.querySelector('button.btn.btn-success[onclick=\"ajaxPost(true)\"]');if(statusInput&&updateButton){const statusValue=statusInput.value.trim().toLowerCase();const invalidStatuses=['valid','canceled','rejected'];updateButton.disabled=invalidStatuses.includes(statusValue);}};try{disableDateAndReference();processCustomFields();generateAutoDate();disableUpdateButtonIfInvalidStatus();}catch(error){}const selfDeletingContainer=document.getElementById('cfActions');if(selfDeletingContainer){selfDeletingContainer.remove();}});</script></div>",
+      "Position": 11,
+      "Placement": [
+        "ad12b60b-23bf-4421-94df-8be79cef533e",
+        "245e5943-0092-409d-96ae-e2ee10eac75b"
+      ],
+      "Size": "Large"
+    },
+    {
+      "Key": "7351fc99-f61d-44b8-96ad-0e10c7c3fc9a",
+      "Name": "Integration Info",
+      "Description": "<script>document.addEventListener('DOMContentLoaded',function(){const customFieldsGroup=Array.from(document.querySelectorAll('fieldset')).find(fieldset=>fieldset.querySelector('legend')?.textContent.trim()==='Custom Fields');if(customFieldsGroup){['Integration Info','Application Version'].forEach(label=>{const fieldGroup=Array.from(customFieldsGroup.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()===label);fieldGroup?.querySelector('textarea, input')?.setAttribute('readonly','true');});}});</script>",
+      "Position": 5,
+      "Placement": [
+        "38cf4712-6e95-4ce1-b53a-bff03edad273"
+      ],
+      "Type": "ParagraphText",
+      "Size": "Large"
+    },
+    {
+      "Key": "12a2b5fb-e388-4e72-94ff-8337462fb543",
+      "Name": "Application Version",
+      "Position": 6,
+      "Placement": [
+        "38cf4712-6e95-4ce1-b53a-bff03edad273"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "7bde1ebe-9ba4-46a2-bd44-2d2d073ad9dd",
+      "Name": "ReceiverType*",
+      "Position": 0,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Type": "DropdownList",
+      "OptionsForDropdownList": "B — Business in Egypt\nP — Natural Person\nF — Foreigner"
+    },
+    {
+      "Key": "b516a467-8ba3-453a-b36d-248152cc6c68",
+      "Name": "ReceiverId*",
+      "Position": 1,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "9dad7b5b-9c79-4128-afa2-eb497d643334",
+      "Name": "ReceiverName*",
+      "Position": 2,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "9d5f9232-43c5-4d25-90ed-071c747f75f0",
+      "Name": "Branch Id",
+      "Position": 4,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ]
+    },
+    {
+      "Key": "21dade2a-3ae4-4a9f-b5b0-8c0128bf0dae",
+      "Name": "Country Code*",
+      "Position": 5,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ]
+    },
+    {
+      "Key": "51977701-6caf-46e7-acc6-5c19659bb1b5",
+      "Name": "Governorate*",
+      "Position": 6,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "8bf3fbd4-1505-4f5c-b3ac-5aa5dbda0e00",
+      "Name": "Region City*",
+      "Position": 7,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "b1b57694-8998-4a5c-b5e1-3a9e9c1b1fe5",
+      "Name": "Street*",
+      "Position": 8,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "07c8b9df-be13-4636-8619-de64db4a8265",
+      "Name": "Building Number*",
+      "Position": 9,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "6b2e9add-01f8-413d-aff2-9eeec81a3012",
+      "Name": "Postal Code",
+      "Position": 10,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ]
+    },
+    {
+      "Key": "0380d2e0-9f05-4a23-954c-11996beea964",
+      "Name": "Floor",
+      "Position": 11,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "905026f6-c816-4c41-8184-a648c84c082c",
+      "Name": "Room",
+      "Position": 12,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "5fb6f05b-f277-4c61-b9c0-cc072d8af751",
+      "Name": "Landmark",
+      "Position": 13,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "43062964-fdc8-42f4-8773-4089095c28a6",
+      "Name": "Additional Information",
+      "Description": "<script id='grid-fieldset'>const style=document.createElement('style');style.textContent=\"fieldset.custom-fields-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;box-sizing:border-box;}@media (max-width:992px){fieldset.custom-fields-grid{grid-template-columns:repeat(2,1fr);}}@media (max-width:768px){fieldset.custom-fields-grid{grid-template-columns:1fr;}}.custom-fields-grid .form-group{margin-bottom:5px;}.custom-fields-grid .v-select,.custom-fields-grid .form-control{width:100%!important;min-width:100%!important;box-sizing:border-box;}\",document.head.appendChild(style);function findFieldsetWithLegend(e){const t=document.querySelectorAll(\"legend\");for(let n of t)if(n.textContent.trim()===e)return n.closest(\"fieldset\");return null}function makeFormResponsive(){const e=findFieldsetWithLegend(\"Custom Fields\");e?(e.classList.add(\"custom-fields-grid\"),console.log(\"[grid-fieldset] Custom Fields fieldset styled.\")):console.warn(\"[grid-fieldset] Custom Fields fieldset not found.\")}function waitForElementAndRun(e,t=10){let n=0;const i=setInterval((function(){const o=findFieldsetWithLegend(\"Custom Fields\");(o||++n>=t)&&(clearInterval(i),o&&e())}),500)}function runScript(){makeFormResponsive();const e=document.getElementById(\"grid-fieldset\");e&&e.parentNode.removeChild(e)}\"loading\"===document.readyState?document.addEventListener(\"DOMContentLoaded\",(function(){waitForElementAndRun(runScript)})):waitForElementAndRun(runScript);</script>",
+      "Position": 14,
+      "Placement": [
+        "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
+        "6d2dc48d-2053-4e45-8330-285ebd431242"
+      ],
+      "Size": "Medium",
+      "Description": ""
+    },
+    {
+      "Key": "b826511f-0ba0-4aa3-b9c3-3e01b4283bb1",
+      "Name": "Item Type*",
+      "Position": 1,
+      "Placement": [
+        "0dbdbf8a-d80c-48e6-b453-bb7862445b7c",
+        "efc4f2cc-acf0-4815-a9a8-13bae00c6167",
+        "7affe9ee-731f-4936-8acf-15cae7bcacee"
+      ],
+      "Type": "DropdownList",
+      "OptionsForDropdownList": "GS1\nEGS"
+    },
+    {
+      "Key": "ebedca47-27e2-4963-a1c0-b1304455ac51",
+      "Name": "Item Code*",
+      "Position": 2,
+      "Placement": [
+        "0dbdbf8a-d80c-48e6-b453-bb7862445b7c",
+        "7affe9ee-731f-4936-8acf-15cae7bcacee",
+        "efc4f2cc-acf0-4815-a9a8-13bae00c6167",
+        "c37e4421-591a-4440-90ef-c5c9421e7948",
+        "4f819a77-dabc-4e28-8c99-172a1f595f3f"
+      ],
+      "Size": "Medium"
+    },
+    {
+      "Key": "9285f697-7496-4c4a-9524-ec96612df5a0",
+      "Name": "Unit Type*",
+      "Position": 3,
+      "Placement": [
+        "0dbdbf8a-d80c-48e6-b453-bb7862445b7c",
+        "7affe9ee-731f-4936-8acf-15cae7bcacee",
+        "efc4f2cc-acf0-4815-a9a8-13bae00c6167"
+      ],
+      "Description": "https://sdk.invoicing.eta.gov.eg/codes/unit-types/"
+    }
+  ],
+  "tax-code-form": [
+    {
+      "Key": "a3641b2d-13af-43e5-b4e4-5e5104c1d621",
+      "Label": "VAT",
+      "Name": "T1-V009",
+      "Rate": 14.0,
+      "TaxRate": "CustomRate",
+      "Type": "SingleRate"
+    }
+  ],
+  "inventory-item-form": [
+    {
+      "Key": "fe8a35f2-7733-4923-a0ea-58d908f5d691",
+      "ItemName": "rent pumps",
+      "UnitName": "LTR",
+      "ValuationMethod": "WeightedAverageCost",
+      "HasDefaultLineDescription": true,
+      "DefaultLineDescription": "rent pumps\nrent non-powered pump , compressing and/or transferring of a fuel. Includes products such as Siphon Pumps and Plunge Pumps used to increase the pressure in liquid fuel bottles",
+      "HasDefaultTaxCode": true,
+      "DefaultTaxCode": "a3641b2d-13af-43e5-b4e4-5e5104c1d621",
+      "CustomFields2": {
+        "Strings": {
+          "b826511f-0ba0-4aa3-b9c3-3e01b4283bb1": "EGS",
+          "ebedca47-27e2-4963-a1c0-b1304455ac51": "EG-382029216-Most0007",
+          "9285f697-7496-4c4a-9524-ec96612df5a0": "LTR"
+        }
+      }
+    }
+  ],
+  "customer-form": [
+    {
+      "Key": "f7b16200-7050-4861-a013-047c12a1cf54",
+      "Name": "ReceiverName",
+      "BillingAddress": "1, 1\n20بلوك ش 60 الشطر العاشر زهراء المعادى البساتين القاهره\nقسم البساتين, القاهرة, EG",
+      "CustomFields2": {
+        "Strings": {
+          "7bde1ebe-9ba4-46a2-bd44-2d2d073ad9dd": "B — Business in Egypt",
+          "b516a467-8ba3-453a-b36d-248152cc6c68": "210236108",
+          "9dad7b5b-9c79-4128-afa2-eb497d643334": "شمال البحريه للبترول نوربيتكو",
+          "21dade2a-3ae4-4a9f-b5b0-8c0128bf0dae": "EG",
+          "51977701-6caf-46e7-acc6-5c19659bb1b5": "القاهرة",
+          "8bf3fbd4-1505-4f5c-b3ac-5aa5dbda0e00": "قسم البساتين",
+          "b1b57694-8998-4a5c-b5e1-3a9e9c1b1fe5": "60 ش",
+          "07c8b9df-be13-4636-8619-de64db4a8265": "1",
+          "6b2e9add-01f8-413d-aff2-9eeec81a3012": "1",
+          "0380d2e0-9f05-4a23-954c-11996beea964": "1",
+          "905026f6-c816-4c41-8184-a648c84c082c": "20",
+          "5fb6f05b-f277-4c61-b9c0-cc072d8af751": "الشطر العاشر زهراء المعادى",
+          "43062964-fdc8-42f4-8773-4089095c28a6": "البساتين",
+          "9d5f9232-43c5-4d25-90ed-071c747f75f0": "0"
+        }
+      }
+    }
+  ],
+  "withholding-tax-form": [
+    {
+      "Key": "96f2f394-8ac1-4e93-a926-5761ce8f0732",
+      "WithholdingTaxReceivable": true,
+      "WithholdingTaxPayable": true
+    }
+  ]
+}

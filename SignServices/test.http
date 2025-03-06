@@ -1,0 +1,13 @@
+### Set Token Driver Path and Test Connection
+curl -X GET "http://localhost:5211/setting?driverPath=D:\SoftHSM2\lib\softhsm2-x64.dll&pin=1234"
+
+### Sign Document
+curl -X POST "http://localhost:5211/sign" -H "Content-Type: application/json" -d "{\"InvoiceHash\": \"test123\", \"Pin\": \"1234\"}"
+
+
+@SignServices_HostAddress = http://localhost:5211
+
+GET {{SignServices_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

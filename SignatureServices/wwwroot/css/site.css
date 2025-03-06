@@ -1,0 +1,124 @@
+body {
+    background: #ffffff;
+}
+
+.cover-container {
+    max-width: 42em;
+}
+
+.card {
+    background-color: #eeeff1;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.card-header {
+    background: #e5e7ea;
+    color: #2c3338;
+    border-bottom: 1px solid #d1d5db;
+    text-shadow: none;
+}
+
+.form-control, .form-select {
+    background-color: #f8f9fa;
+    border: 1px solid #d1d5db;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0078d4;
+        box-shadow: none;
+    }
+
+.btn {
+    border-radius: 4px;
+    text-shadow: none;
+}
+
+.card-footer {
+    background-color: #e5e7ea;
+    border-top: 1px solid #d1d5db;
+}
+
+.form-control, .form-select {
+    background-color: #f8f9fa;
+    border: 1px solid #d1d5db;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0078d4;
+        box-shadow: 0 0 0 1px rgba(0, 120, 212, 0.1);
+    }
+
+.btn-primary {
+    background: #0078d4;
+    border: 1px solid #106ebe;
+}
+
+.btn-secondary {
+    background: #edeff1;
+    border: 1px solid #d2d5db; /* Updated to lighter color */
+    color: #2c3338;
+}
+
+.btn-outline-secondary {
+    border: 1px solid #d2d5db; /* Added for outline button */
+    color: #2c3338;
+}
+
+    .btn-outline-secondary:hover {
+        background: #edeff1;
+        border-color: #d2d5db;
+        color: #2c3338;
+    }
+
+.btn-secondary:hover {
+    background: #e3e5e8;
+}
+
+.form-label {
+    color: #2c3338;
+    text-align: left;
+    display: block;
+}
+
+.card-footer .row {
+    margin: 0;
+}
+
+.card-footer .input-group {
+    width: 200px; /* Fixed width for PIN input */
+    margin-right: 10px;
+    text-align: left;
+}
+
+.form-check {
+    padding-left: 1.8rem;
+}
+
+.card-body {
+    text-align: left;
+}
+
+.form-text {
+    color: #5c6670;
+}
+
+h3 {
+    color: #2c3338;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+footer p {
+    color: #2c3338;
+    text-align: center;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+.form-check-input:checked {
+    background-color: #0078d4;
+    border-color: #0078d4;
+}

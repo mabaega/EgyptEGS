@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "EgyptEGS Home";
+}
+<style>
+    .list-group-item {
+        position: relative;
+        display: block;
+        padding: var(--#{$prefix}list-group-item-padding-y) var(--#{$prefix}list-group-item-padding-x);
+        color: var(--#{$prefix}list-group-color);
+        text-decoration: if($link-decoration == none, null, none);
+        background-color: var(--#{$prefix}list-group-bg);
+        border: none;
+    }
+</style>
+<div class="container mt-1">
+    <div class="text-center">
+        <div class="card shadow-lg rounded p-3 mt-1">
+            <h2 class="mb-2">Welcome to EgyptEGS</h2>
+            <p class="lead">The Simple and Free eInvoicing Integration Solution</p>
+        </div>
+
+        <div class="card shadow-lg rounded p-4 mt-1">
+            <h4 class="mb-3">What is EgyptEGS?</h4>
+            <p class="custom-lead">
+                EgyptEGS is a web service designed to simplify your eInvoicing process.<br />
+                It seamlessly integrates the <a href="https://manager.io" target="_blank">"Manager"</a> accounting application with the
+                <a href="https://invoicing.eta.gov.eg/" target="_blank">Egyptian Tax Authority (ETA) Invoicing portal</a>.
+            </p>
+
+            <div class="d-flex justify-content-center align-items-center my-1">
+                <div class="mx-3">
+                    <img src="/images/managerlogo.png" alt="Manager io Icon" class="img-fluid" style="height: 60px;">
+                </div>
+                <span class="fs-3 mx-3">&#x2194;</span>
+                <div class="mx-3">
+                    <img src="/images/logo.png" alt="Egypt EGS Icon" class="img-fluid" style="height: 60px;">
+                </div>
+                <span class="fs-3 mx-3">&#x2194;</span>
+                <div class="mx-3">
+                    <img src="/images/Egyptlogo.png" alt="Egypt TRA Icon" class="img-fluid" style="height: 60px;">
+                </div>
+            </div>
+
+            <h4 class="mt-2">How to Start?</h4>
+            <div class="list-group">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <b>Step 1:</b> Go to the <a href="https://profile.eta.gov.eg/TaxpayerProfile" target="_blank">Invoicing portal</a> and register new ERP to get the <b>ClientID</b> and <b>ClientSecret</b> for accessing the Portal API.
+                    </li>
+                    <li class="list-group-item">
+                        <del><b>Step 2:</b> Download the <b>SignService</b> application to sign documents. Ensure that you can access the <b>USB Token</b> you are using.</del>
+                        <small class="text-warning ms-2">(Currently supporting Invoice v0.9 only)</small>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Step 3:</b> Add the relay URL to your invoice: <span class="fw-bold text-success" id="relay-url"></span>. Save your invoice and click <b>[Relay]</b>. On your first use, you'll be redirected to the business setup page to integrate the Manager application with the Egyptian Tax Authority (ETA) Invoicing portal.
+                    </li>
+                </ul>
+            </div>
+
+            <h4 class="mt-2">Next Steps</h4>
+            <div class="list-group">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <b>Step 1:</b> Ensure all <b>Codes Usage</b> for Inventory Items in Manager are match the <b>Codes registered and Approved</b> in the Portal.
+                    </li>
+                    <li class="list-group-item">
+                        <b>Step 2:</b> Ensure that all <b>Customer</b> Information is filled out completely and all <b>TaxCodes</b> used are created in Manager.
+                    </li>
+                </ul>
+            </div>
+
+            <h4 class="mt-2 text-warning"><b>Attention</b></h4>
+            <p class="custom-lead">
+                This is an initial release focused on testing and ensuring all features function as expected.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentUrl = window.location.origin + window.location.pathname;
+    if (currentUrl.endsWith('/')) {
+        currentUrl = currentUrl.slice(0, -1);
+    }
+    const relayUrl = currentUrl + '/relay';
+    document.getElementById('relay-url').textContent = relayUrl;
+</script>
