@@ -203,7 +203,7 @@ namespace EgyptEGS.Controllers
                     SubmissionDate = DateTime.UtcNow,
                     DocumentUUID = submitResponse.AcceptedDocuments[0].UUID,
                     DocumentLogId = submitResponse.AcceptedDocuments[0].LongId,
-                    DocumentStatus = "Submited",
+                    DocumentStatus = "Submitted",
                     HashKey = submitResponse.AcceptedDocuments[0].HashKey,
                     PublicUrl = ""
                 };

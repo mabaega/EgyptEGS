@@ -4,6 +4,9 @@ namespace EgyptEGS.ApiClient.Model
 {
     public class GetDocumentDetailsResponse
     {
+        [JsonProperty("requestStatus")]
+        public string RequestStatus { get; set; }
+
         [JsonProperty("submissionUUID")]
         public string SubmissionUUID { get; set; }
 

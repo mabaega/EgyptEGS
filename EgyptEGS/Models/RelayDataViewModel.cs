@@ -15,7 +15,7 @@ namespace EgyptEGS.Models
         public string DocumentTypeVersion { get; set; }
         public List<string> DocumentReference { get; set; } = new List<string>();
         public DateTime ServiceDeliveryDate { get; set; }
-        public DateTime IssueDate { get; set; }
+        public string IssueDate { get; set; }
         public string CurrencyCode { get; set; } = "EGP";
         public decimal TotalTaxAmount { get; internal set; }
         public string InvoiceJson { get; set; }

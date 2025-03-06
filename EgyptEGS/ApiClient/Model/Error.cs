@@ -4,6 +4,9 @@ namespace EgyptEGS.ApiClient.Model
 {
     public class Error
     {
+        [JsonProperty("requestStatus")]
+        public string RequestStatus { get; set; }
+
         [JsonProperty("code")]
         public string Code { get; set; }
 

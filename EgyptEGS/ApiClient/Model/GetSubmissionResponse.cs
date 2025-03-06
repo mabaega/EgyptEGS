@@ -4,6 +4,9 @@ namespace EgyptEGS.ApiClient.Model
 {
     public class GetSubmissionResponse
     {
+        [JsonProperty("requestStatus")]
+        public string RequestStatus { get; set; }
+
         [JsonProperty("submissionId")]
         public string SubmissionId { get; set; }
 

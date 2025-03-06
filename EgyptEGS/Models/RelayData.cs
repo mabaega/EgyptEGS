@@ -18,7 +18,7 @@ namespace EgyptEGS.Models
         public ManagerInvoice ManagerInvoice { get; private set; }
 
         public string DocumentType { get; private set; } = "I";
-        public DateTime LocalIssueDate { get; private set; } = DateTime.Now;
+        public string LocalIssueDate { get; private set; }
         public string DocumentTypeVersion { get; private set; } = "0.9";
         public string WHTSubType { get; private set; } = "W002";
 
@@ -116,19 +116,17 @@ namespace EgyptEGS.Models
             {
                 CurrencyCode = RelayDataHelper.FindStringValueInJson(jsonInvoice, "Code", "Currency") ?? "EGP";
 
-                string dateCreatedString = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DocumentIssuedDateGuid);
+                LocalIssueDate = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DocumentIssuedDateGuid);
 
-                if (DateTime.TryParseExact(dateCreatedString, "yyyy-MM-dd HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                if(string.IsNullOrEmpty(LocalIssueDate))
                 {
-                    if (parsedDate != DateTime.MinValue)
-                    {
-                        LocalIssueDate = parsedDate;
-                    }
+                    ManagerInvoice.IssueDate.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 WHTSubType = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.WHTSubTypeGuid) ?? "W002";
 
                 InvoiceSummary.DocumentIssueDate = LocalIssueDate;
+
                 InvoiceSummary.SubmissionId = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.SubmissionIdGuid) ?? "";
 
                 string submissionDate = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DocumentIssuedDateGuid);

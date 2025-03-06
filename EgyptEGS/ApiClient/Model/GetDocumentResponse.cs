@@ -4,6 +4,9 @@ namespace EgyptEGS.ApiClient.Model
 {
     public class GetDocumentResponse
     {
+        [JsonProperty("requestStatus")]
+        public string RequestStatus { get; set; }
+
         [JsonProperty("document")]
         public string Document { get; set; }
 

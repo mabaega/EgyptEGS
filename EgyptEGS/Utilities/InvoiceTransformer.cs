@@ -18,7 +18,14 @@ namespace EgyptEGS.Utilities
         //
         public (string, string) Transform(RelayData relayData)
         {
-            DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(relayData.LocalIssueDate, TimeZoneInfo.Local);
+            // parse string relayData.LocalIssueDate "2025-03-06T13:48:56Z" into UTC DateTime
+            DateTime utcDateTime;
+            
+            if (!DateTime.TryParseExact(relayData.LocalIssueDate, "yyyy-MM-ddTHH:mm:ssZ", null, System.Globalization.DateTimeStyles.AdjustToUniversal, out utcDateTime))
+            {
+                throw new FormatException($"Invalid date format: {relayData.LocalIssueDate}");
+            }
+
 
             EgyptianInvoice egyptianInvoice = new()
             {

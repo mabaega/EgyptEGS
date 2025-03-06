@@ -5,7 +5,7 @@ namespace EgyptEGS.Models
 {
     public class InvoiceSummary
     {
-        public DateTime DocumentIssueDate { get; set; }
+        public string DocumentIssueDate { get; set; }
         public string SubmissionId { get; set; } = string.Empty;
 
         [JsonProperty("dateTimeIssued")]

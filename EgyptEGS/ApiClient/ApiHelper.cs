@@ -83,6 +83,7 @@ namespace EgyptEGS.ApiClient
 
                 string content = await response.Content.ReadAsStringAsync();
                 DocumentSubmitResponse? result = JsonConvert.DeserializeObject<DocumentSubmitResponse>(content);
+                result.RequestStatus = response.StatusCode.ToString();
 
                 if (response.Headers.Contains("Retry-After"))
                 {
@@ -133,6 +134,7 @@ namespace EgyptEGS.ApiClient
 
                 string content = await response.Content.ReadAsStringAsync();
                 GetSubmissionResponse? result = JsonConvert.DeserializeObject<GetSubmissionResponse>(content);
+                result.RequestStatus = response.StatusCode.ToString();
 
                 if (response.Headers.Contains("Retry-After"))
                 {
@@ -179,6 +181,7 @@ namespace EgyptEGS.ApiClient
 
                 string content = await response.Content.ReadAsStringAsync();
                 GetDocumentResponse? result = JsonConvert.DeserializeObject<GetDocumentResponse>(content);
+                result.RequestStatus = response.StatusCode.ToString();
 
                 if (response.Headers.Contains("Retry-After"))
                 {
@@ -225,6 +228,7 @@ namespace EgyptEGS.ApiClient
 
                 string content = await response.Content.ReadAsStringAsync();
                 GetDocumentDetailsResponse? result = JsonConvert.DeserializeObject<GetDocumentDetailsResponse>(content);
+                result.RequestStatus = response.StatusCode.ToString();
 
                 if (response.Headers.Contains("Retry-After"))
                 {
@@ -318,13 +322,14 @@ namespace EgyptEGS.ApiClient
             }
         }
 
-
         private async Task HandleErrorResponse(HttpResponseMessage response)
         {
             string content = await response.Content.ReadAsStringAsync();
             Error? error = JsonConvert.DeserializeObject<Error>(content);
-
+            error.RequestStatus = response.StatusCode.ToString();
+            
             int retryAfter = 0;
+            
             if (response.Headers.Contains("Retry-After"))
             {
                 int.TryParse(response.Headers.GetValues("Retry-After").FirstOrDefault(), out retryAfter);

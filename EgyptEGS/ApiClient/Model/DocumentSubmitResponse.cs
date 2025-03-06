@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 public class DocumentSubmitResponse
 {
+    [JsonProperty("requestStatus")]
+    public string RequestStatus { get; set; }
+
     [JsonProperty("submissionId")]
     public string SubmissionId { get; set; }
 
