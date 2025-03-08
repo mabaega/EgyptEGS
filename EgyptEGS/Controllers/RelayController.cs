@@ -145,7 +145,7 @@ namespace EgyptEGS.Controllers
         {
             try
             {
-                _logger.LogInformation("Received AjaxSubmitInvoice request with model: {@Model}", model);
+                //_logger.LogInformation("Received AjaxSubmitInvoice request with model: {@Model}", model);
 
                 if (model.EgyptianInvoiceJson == null)
                 {
@@ -181,7 +181,7 @@ namespace EgyptEGS.Controllers
 
                 wrappedJson = wrappedJson.CleanseJson(true);
 
-                _logger.LogInformation("Signed JSON: {Json}", wrappedJson);
+                //_logger.LogInformation("Signed JSON: {Json}", wrappedJson);
 
                 // 4. Kirim ke API
                 DocumentSubmitResponse submitResponse = await apiHelper.SubmitDocument(wrappedJson);
@@ -260,13 +260,13 @@ namespace EgyptEGS.Controllers
         {
             string invoiceJson = model.InvoiceJson;
 
-            invoiceJson = RelayDataHelper.UpdateOrCreateField(invoiceJson, model.DocumentType.ToLower() == "i" ? "IssueDate" : "Date", updateSummary.DocumentIssueDate.ToString("yyyy-MM-dd"));
+            invoiceJson = RelayDataHelper.UpdateOrCreateField(invoiceJson, model.DocumentType.ToLower() == "i" ? "IssueDate" : "Date", updateSummary.DocumentIssueDate.Substring(0,10));
 
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.SubmissionIdGuid, updateSummary.SubmissionId);
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.SubmissionDateGuid, updateSummary.SubmissionDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.DocumentUUIDGuid, updateSummary.DocumentUUID);
-            invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.DocumentIssuedDateGuid, updateSummary.DocumentIssueDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.DocumentIssuedDateGuid, updateSummary.DocumentIssueDate);
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.DoucmentStatusGuid, updateSummary.DocumentStatus);
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.DocumentLongIdGuid, updateSummary.DocumentLogId);
             invoiceJson = RelayDataHelper.ModifyStringCustomFields2(invoiceJson, ManagerCustomField.PublicUrlGuid, updateSummary.PublicUrl);
@@ -280,7 +280,7 @@ namespace EgyptEGS.Controllers
         {
             try
             {
-                _logger.LogInformation("Received AjaxUpdateStatus request with model: {@Model}", model);
+                //_logger.LogInformation("Received AjaxUpdateStatus request with model: {@Model}", model);
 
                 InvoiceSummary invoiceSummary = JsonConvert.DeserializeObject<InvoiceSummary>(model.InvoiceSummaryJson);
 
@@ -302,8 +302,10 @@ namespace EgyptEGS.Controllers
 
                 GetSubmissionResponse submissionResponse = await apiHelper.GetSubmission(invoiceSummary.SubmissionId);
 
-                invoiceSummary.DocumentIssueDate = submissionResponse.DocumentSummary[0].DateTimeIssued.ToLocalTime();
+                invoiceSummary.DocumentIssueDate = model.IssueDate;
                 invoiceSummary.SubmissionDate = submissionResponse.DateTimeReceived;
+                invoiceSummary.DocumentUUID = submissionResponse.DocumentSummary[0].UUID;
+                invoiceSummary.DocumentLogId = submissionResponse.DocumentSummary[0].LongId;
                 invoiceSummary.DocumentStatus = submissionResponse.DocumentSummary[0].Status;
                 invoiceSummary.PublicUrl = submissionResponse.DocumentSummary[0].PublicUrl;
 

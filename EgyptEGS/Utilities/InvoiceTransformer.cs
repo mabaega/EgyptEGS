@@ -21,7 +21,7 @@ namespace EgyptEGS.Utilities
             // parse string relayData.LocalIssueDate "2025-03-06T13:48:56Z" into UTC DateTime
             DateTime utcDateTime;
             
-            if (!DateTime.TryParseExact(relayData.LocalIssueDate, "yyyy-MM-ddTHH:mm:ssZ", null, System.Globalization.DateTimeStyles.AdjustToUniversal, out utcDateTime))
+            if (!DateTime.TryParseExact(relayData.LocalIssueDate, "yyyy-MM-dd HH:mm:ss", null, System.Globalization.DateTimeStyles.AdjustToUniversal, out utcDateTime))
             {
                 throw new FormatException($"Invalid date format: {relayData.LocalIssueDate}");
             }
@@ -52,33 +52,11 @@ namespace EgyptEGS.Utilities
                 InvoiceLines = TransformInvoiceLines(relayData)
             };
 
-                        //check all items have a valid item code, item type unitType and quantity<>0
-            List<string> validationErrors = new();
-            foreach (var line in egyptianInvoice.InvoiceLines)
+            if (!relayData.DocumentType.Equals("I", StringComparison.CurrentCultureIgnoreCase))
             {
-                if (string.IsNullOrEmpty(line.ItemType))
-                {
-                    validationErrors.Add($"Item Type is required for line with description: {line.Description}");
-                }
-                if (string.IsNullOrEmpty(line.ItemCode))
-                {
-                    validationErrors.Add($"Item Code is required for line with description: {line.Description}");
-                }
-                if (string.IsNullOrEmpty(line.UnitType))
-                {
-                    validationErrors.Add($"Unit Type is required for line with description: {line.Description}");
-                }
-                if (line.Quantity <= 0)
-                {
-                    validationErrors.Add($"Quantity must be greater than 0 for line with description: {line.Description}");
-                }
+                egyptianInvoice.References = relayData.CNDNReferences;
             }
-
-            if (validationErrors.Count > 0)
-            {
-                throw new ValidationException("Invoice validation failed", validationErrors);
-            }
-
+            
             // Calculate invoice level totals according to validation rules
             egyptianInvoice.TotalSalesAmount = egyptianInvoice.InvoiceLines.Sum(l => l.SalesTotal);
             egyptianInvoice.TotalDiscountAmount = egyptianInvoice.InvoiceLines.Sum(l => l.Discount?.Amount ?? 0);
@@ -307,7 +285,7 @@ namespace EgyptEGS.Utilities
                     ItemType = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.ItemTypeGuid) ?? string.Empty,
                     ItemCode = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.ItemCodeGuid) ?? string.Empty,
                     InternalCode = line.Item?.ItemCode,
-                    UnitType = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.UnitTypeGuid) ?? string.Empty,
+                    UnitType = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.UnitTypeGuid) ??  line.Item?.UnitName ?? string.Empty,
                     Quantity = qty,
                     UnitValue = new UnitValue
                     {

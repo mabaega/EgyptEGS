@@ -8,7 +8,7 @@ namespace EgyptEGS.Models
         public string DocumentIssueDate { get; set; }
         public string SubmissionId { get; set; } = string.Empty;
 
-        [JsonProperty("dateTimeIssued")]
+        [JsonProperty("SubmissionDate")]
         [JsonConverter(typeof(CustomDateTimeConverter))]
         public DateTime SubmissionDate { get; set; }
         public string DocumentUUID { get; set; } = string.Empty;

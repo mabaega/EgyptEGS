@@ -16,7 +16,7 @@ namespace EgyptEGS.Models
             // Set the default values for the properties
             Issuer = new Party();
             Issuer.Type = PartyType.B;
-            Issuer.Id = "382029216";
+            Issuer.Id = "123456789";
             Issuer.Name = "Issuer Company";
             Issuer.Address = new Address
             {

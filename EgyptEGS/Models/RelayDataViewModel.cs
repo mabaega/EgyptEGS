@@ -13,7 +13,7 @@ namespace EgyptEGS.Models
         public string ClientSecret { get; set; }
         public string DocumentType { get; set; }
         public string DocumentTypeVersion { get; set; }
-        public List<string> DocumentReference { get; set; } = new List<string>();
+        public List<string> DocumentReferences { get; set; } = new List<string>();
         public DateTime ServiceDeliveryDate { get; set; }
         public string IssueDate { get; set; }
         public string CurrencyCode { get; set; } = "EGP";

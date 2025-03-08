@@ -43,6 +43,7 @@
                         <input type="hidden" name="ClientSecret" value="@Model.ClientSecret" />
                         <input type="hidden" name="SignServiceUrl" value="@Model.SignServiceUrl" />
                         <input type="hidden" name="IssueDate" value="@Model.IssueDate" />
+                        
 
                         <div class="card shadow-sm">
                             <div class="card-header text-center">
@@ -51,13 +52,19 @@
                             <div class="card-body" style="min-height: 605px;">
 
                                 <div class="row">
-                                    <div class="col-md-3">
+                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="DocumentType" class="form-label">Document Type:</label>
-                                            <input type="text" class="form-control form-control-sm text-center" id="DocumentType" name="DocumentType" value="@EgyptianInvoice.DocumentType" readonly>
+                                            <input type="text" class="form-control form-control-sm text-center" id="DocumentType" name="DocumentType" 
+                                                value="@(EgyptianInvoice.DocumentType?.ToUpper() switch {
+                                                    "I" => "Invoice",
+                                                    "C" => "Credit Note",
+                                                    "D" => "Debit Note",
+                                                    _ => EgyptianInvoice.DocumentType
+                                                })" readonly>
                                         </div>
                                     </div>
-
+                                    
                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="DocumentTypeVersion" class="form-label">Document Type Version:</label>
@@ -92,17 +99,18 @@
                                     @{
                                         if (!Model.DocumentType.ToUpper().Equals("I"))
                                         {
-                                            <div class="col-md-3">
+                                            <div class="col-md-6">
                                                 <div class="mb-2">
                                                     <label for="DocumentReference" class="form-label">Document Reference:</label>
-                                                    <input type="text" class="form-control form-control-sm text-center" id="DocumentReference" name="DocumentReference" value="@string.Join(";", Model.DocumentReference.ToArray())" readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <div class="mb-2">
-                                                    <label for="ServiceDeliveryDate" class="form-label">ServiceDelivery Date:</label>
-                                                    <input type="text" class="form-control form-control-sm text-center" id="ServiceDeliveryDate" name="InternalId" value="@Model.ServiceDeliveryDate" readonly>
+                                                    @foreach (var reference in Model.DocumentReferences)
+                                                    {
+                                                        <input type="hidden" name="DocumentReferences" value="@reference" />
+                                                    }
+                                                    <input type="text" 
+                                                           class="form-control form-control-sm text-center" 
+                                                           id="DocumentReference" 
+                                                           value="@string.Join(";", Model.DocumentReferences)" 
+                                                           readonly>
                                                 </div>
                                             </div>
                                         }
@@ -233,21 +241,20 @@
 
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <button type="button" class="btn btn-secondary mt-1" onclick="window.location.href='@Model.Referrer'">Back to Manager</button>
+                                    <button type="button" class="btn btn-secondary mt-1" style="width: 200px;" onclick="window.location.href='@Model.Referrer'">Back to Manager</button>
                                     </div>
                                     <div id="buttonsContainer">
                                         <button type="button" 
                                                 class="btn btn-success mt-1"
                                                 id="updateStatusButton" 
-                                                onclick="updateDocumentStatus()" 
-                                                style="display: @(InvoiceSummary != null && 
-                                                                !string.IsNullOrEmpty(InvoiceSummary?.DocumentStatus) ? "inline-block" : "none")">
+                                                style="width: 200px; display: @(InvoiceSummary != null &&
+                                            !string.IsNullOrEmpty(InvoiceSummary?.SubmissionId) ? "inline-block" : "none")">
                                             <i class="fas fa-sync"></i> Update Status
                                         </button>
                                         <button type="button" 
-                                                id="submitInvoiceButton" 
+                                                id="submitInvoiceButton"
                                                 class="btn btn-primary mt-1"
-                                                style="display: @(string.IsNullOrEmpty(InvoiceSummary?.DocumentStatus) || 
+                                                style="display: @(string.IsNullOrEmpty(InvoiceSummary?.SubmissionId) || 
                                                                 InvoiceSummary?.DocumentStatus.ToUpper() == "INVALID" ? "inline-block" : "none")">
                                             <i class="fas fa-paper-plane"></i> 
                                             <span>@(Model.DocumentTypeVersion == "1.0" ? "Sign and Submit Document" : "Submit Document")</span>
@@ -332,7 +339,7 @@
                                 "INVALID" => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #e72000; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #e72000;",
                                 "REJECTED" => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #e72000; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #e72000;",
                                 "VALID" => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #018524; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #018524;",
-                                "CANCELED" => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #747775; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #747775;",
+                                "CANCELLED" => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #747775; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #747775;",
                                     _ => "min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; border: 1px solid var(--bs-border-color-translucent); padding: 6px; border-radius: 5px; background-color: var(--bs-card-cap-bg);"
                                 };
                             }
@@ -429,45 +436,25 @@
             });
 
             const data = typeof response === 'string' ? JSON.parse(response) : response;
-            updateUIElements(data);
 
-            if (data.ApiInvoice) {
-                await updateManagerInvoice(data.ApiInvoice);
-                await showSuccessMessage('Document has been successfully submitted and updated in Manager');
-            } else {
-                await showSuccessMessage('Document has been successfully submitted');
+            // Update InvoiceSummary in the form
+            if (data.InvoiceSummary) {
+                $('input[name="InvoiceSummaryJson"]').val(JSON.stringify(data.InvoiceSummary));
             }
 
-        } catch (error) {
-            console.error('Error:', error);
-            await showErrorMessage('Failed to submit document: ' + (error.responseText || error.message || 'Unknown error'));
-        } finally {
-            hideLoading();
-        }
-    }
-
-    async function updateDocumentStatus() {
-        try {
-            showLoading('Get Document Status...');
-            const formData = new FormData($('#relayForm')[0]);
-
-            const response = await $.ajax({
-                url: '@Url.Action("AjaxUpdateStatus", "Relay")',
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false
-            });
-
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            
             updateUIElements(data);
 
+            // Show API Response first
+            if (data.ApiResponse.requestStatus === "OK" || data.ApiResponse.requestStatus === "Accepted") {
+                await showSuccessMessage(`Document successfully submitted to ETA Portal (ID: ${data.ApiResponse.submissionId})`);
+            } else {
+                const errorDetails = data.ApiResponse.error || 'Unknown error';
+                await showErrorMessage(`Failed to submit document: ${errorDetails}`);
+            }
+
+            // If Manager update is needed, do it separately
             if (data.ApiInvoice) {
                 await updateManagerInvoice(data.ApiInvoice);
-                await showSuccessMessage('Document status has been successfully processed and updated in Manager');
-            } else {
-                await showSuccessMessage('Document Status has been successfully processed');
             }
 
         } catch (error) {
@@ -479,23 +466,119 @@
     }
 
     async function updateManagerInvoice(apiInvoice) {
-        const response = await fetch(apiInvoice.ApiUrl, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiInvoice.SecretKey}`
-            },
-            body: apiInvoice.Payload
-        });
+        try {
+            showLoading('Updating Manager...');
+            const response = await fetch(apiInvoice.ApiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiInvoice.SecretKey}`
+                },
+                body: apiInvoice.Payload
+            });
 
-        if (!response.ok) {
-            throw new Error('Failed to update Manager invoice');
+            if (!response.ok) {
+                throw new Error('Failed to update Manager invoice');
+            }
+
+            // Show success message for Manager update
+            await showSuccessMessage('Successfully updated invoice in Manager');
+            
+            // Activate Server Response tab
+            document.querySelector('#nav-response-tab').click();
+            
+            return response;
+        } catch (error) {
+            await showErrorMessage('Failed to update Manager: ' + error.message);
+            throw error;
+        } finally {
+            hideLoading();
         }
+    }
 
-        // Activate Server Response tab
-        document.querySelector('#nav-response-tab').click();
-        
-        return response;
+    async function updateDocumentStatus() {
+        try {
+            showLoading('Getting Document Status...');
+            const formData = new FormData($('#relayForm')[0]);
+
+            const response = await $.ajax({
+                url: '@Url.Action("AjaxUpdateStatus", "Relay")',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false
+            });
+            const data = typeof response === 'string' ? JSON.parse(response) : response;
+            // Update InvoiceSummary in the form
+            if (data.InvoiceSummary) {
+                $('input[name="InvoiceSummaryJson"]').val(JSON.stringify(data.InvoiceSummary));
+            }
+            updateUIElements(data);
+
+            // Show API Response first
+            if (data.ApiResponse.requestStatus === "OK") {
+                await showSuccessMessage(`Document status successfully retrieved from ETA Portal (Status: ${data.ApiResponse.overallStatus})`);
+            } else {
+                const errorDetails = data.ApiResponse.error || 'Unknown error';
+                await showErrorMessage(`Failed to get document status: ${errorDetails}`);
+                return; // Stop if ETA update fails
+            }
+
+            // If Manager update is needed, do it separately
+            if (data.ApiInvoice) {
+                await updateManagerInvoice(data.ApiInvoice);
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            await showErrorMessage('Failed to get document status: ' + (error.responseText || error.message || 'Unknown error'));
+        } finally {
+            hideLoading();
+        }
+    }
+
+    async function updateManagerInvoice(apiInvoice) {
+        try {
+            showLoading('Updating Manager...');
+
+            const response = await fetch(apiInvoice.ApiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiInvoice.SecretKey}`
+                },
+                body: apiInvoice.Payload
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to update Manager invoice');
+            }
+
+            // Get response text first
+            const responseText = await response.text();
+            
+            // Try to parse as JSON if possible
+            let responseData;
+            try {
+                responseData = responseText ? JSON.parse(responseText) : {};
+            } catch (e) {
+                // If not JSON, use text response
+                responseData = { message: responseText || 'Update successful (no response content)' };
+            }
+
+            // Show success message with response details
+            await showSuccessMessage(`Successfully updated invoice in Manager\nResponse: ${JSON.stringify(responseData, null, 2)}`);
+            
+            // Activate Server Response tab
+            document.querySelector('#nav-response-tab').click();
+
+        } catch (error) {
+            console.error('Manager update error:', error);
+            await showErrorMessage('Failed to update Manager: ' + error.message);
+            throw error;
+        } finally {
+            hideLoading();
+        }
     }
 
     function updateUIElements(data) {
@@ -523,7 +606,7 @@
                     case 'VALID':
                         divStyle = 'min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #018524; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #018524;';
                         break;
-                    case 'CANCELED':
+                    case 'CANCELLED':
                         divStyle = 'min-height: 20px; word-wrap: break-word; overflow-wrap: break-word; font-family: monospace; color: #fff; background-color: #747775; font-weight: bold; padding: 6px; border-radius: 5px; border: 1px solid #747775;';
                         break;
                     default:
@@ -538,7 +621,7 @@
             const submitButton = document.getElementById('submitInvoiceButton');
             const updateButton = document.getElementById('updateStatusButton');
             
-            submitButton.style.display = (data.InvoiceSummary.DocumentStatus === '' || 
+            submitButton.style.display = (!data.InvoiceSummary.SubmissionId ||
                                         data.InvoiceSummary.DocumentStatus.toUpperCase() === 'INVALID') 
                                         ? 'inline-block' : 'none';
             
@@ -667,8 +750,6 @@
             confirmButtonText: 'OK'
         });
     }
-
-    
     // Initialize event listeners when document is ready
     $(document).ready(function() {
         // Submit button event listener
@@ -677,7 +758,15 @@
         // Update status button event listener
         const updateStatusButton = document.getElementById('updateStatusButton');
         if (updateStatusButton) {
+            updateStatusButton.removeEventListener('click', updateDocumentStatus);
             updateStatusButton.addEventListener('click', updateDocumentStatus);
+        }
+
+        // Sign and submit button event listener
+        const signAndSubmitButton = document.getElementById('signAndSubmitButton');
+        if (signAndSubmitButton) {
+            signAndSubmitButton.removeEventListener('click', signAndSubmit);
+            signAndSubmitButton.addEventListener('click', signAndSubmit);
         }
 
         // Initialize QR Code if URL exists
@@ -685,7 +774,6 @@
         if (publicUrl) {
             generateQRCode(publicUrl);
         }
-
     });
 </script>
 

@@ -70,7 +70,7 @@ namespace EgyptEGS.Controllers
         {
             try
             {
-                _logger.LogInformation("Received appConfigJson: {0}", appConfigJson);
+                //_logger.LogInformation("Received appConfigJson: {0}", appConfigJson);
 
                 if (string.IsNullOrEmpty(appConfigJson))
                 {

@@ -36,6 +36,7 @@
     {
       "Key": "c081a493-4113-4bb6-bf2d-91deab7e7e25",
       "Name": "Document UUID",
+      "Description": "<script id='grid-fieldset'>const style=document.createElement('style');style.textContent=`fieldset.custom-fields-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;box-sizing:border-box;}@media (max-width:992px){fieldset.custom-fields-grid{grid-template-columns:repeat(2,1fr);}}@media (max-width:768px){fieldset.custom-fields-grid{grid-template-columns:1fr;}}.custom-fields-grid .form-group{margin-bottom:5px;}.custom-fields-grid .v-select,.custom-fields-grid .form-control{width:100%!important;min-width:100%!important;box-sizing:border-box;}`;document.head.appendChild(style);function findFieldsetWithLegend(legendText){const legends=document.querySelectorAll('legend');for(let legend of legends)if(legend.textContent.trim()===legendText)return legend.closest('fieldset');return null}function makeFormResponsive(){const fieldset=findFieldsetWithLegend('Custom Fields');fieldset?(fieldset.classList.add('custom-fields-grid')):console.warn('[grid-fieldset] Custom Fields fieldset not found.')}function waitForElementAndRun(callback,maxAttempts=10){let attempts=0;const checkExist=setInterval(function(){const fieldset=findFieldsetWithLegend('Custom Fields');(fieldset||++attempts>=maxAttempts)&&(clearInterval(checkExist),fieldset&&callback())},500)}function runScript(){makeFormResponsive();const script=document.getElementById('grid-fieldset');script&&script.parentNode.removeChild(script)}'loading'===document.readyState?document.addEventListener('DOMContentLoaded',function(){waitForElementAndRun(runScript)}):waitForElementAndRun(runScript);</script>",
       "Position": 7,
       "Placement": [
         "ad12b60b-23bf-4421-94df-8be79cef533e",
@@ -65,7 +66,8 @@
     },
     {
       "Key": "c43e2286-91c4-42fd-95f9-ddda74cd91fe",
-      "Name": "Document Submission Status",
+      "Name": "Submission Status",
+      "Description": "<div id='cfActions'><script>document.addEventListener('DOMContentLoaded',function(){const updateButton=document.querySelector('button.btn.btn-success[onclick=\"ajaxPost(true)\"]'),isUpdate=!!updateButton,customFields=[{label:'Submission ID',actions:['readonly','clear']},{label:'Submission Date',actions:['readonly','clear']},{label:'Document UUID',actions:['readonly','clear']},{label:'Document Issued Date',actions:['readonly','clear']},{label:'Document LongID',actions:['readonly','hide','clear']},{label:'Submission Status',actions:['readonly','clear']},{label:'Public URL',actions:['readonly','hide','clear']}],disableDateAndReference=()=>{const dateInput=document.querySelector('.mx-input');if(dateInput){dateInput.disabled=!0;const calendarIcon=document.querySelector('.mx-icon-calendar');calendarIcon&&(calendarIcon.style.pointerEvents='none',calendarIcon.style.opacity='0.5')}const checkbox=document.querySelector('.input-group-addon input[type=\"checkbox\"]'),inputText=document.querySelector('.input-group input[type=\"text\"]');checkbox&&inputText&&''!==inputText.value&&(app.AutomaticReference=!1,checkbox.checked=!1,checkbox.disabled=!0,inputText.disabled=!0)},processCustomFields=()=>{!isUpdate&&app?.CustomFields2?.Strings&&Object.keys(app.CustomFields2.Strings).forEach(uuid=>{app.CustomFields2.Strings[uuid]=''}),customFields.forEach(field=>{const customField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()===field.label);if(!customField)return;const input=customField.querySelector('input, textarea');!isUpdate&&field.actions.includes('clear')&&input&&(input.value=''),field.actions.includes('readonly')&&input&&input.setAttribute('readonly','true'),field.actions.includes('hide')&&(customField.style.display='none')})},generateAutoDate=()=>{if(!isUpdate){const now=new Date,currentDateTime=now.toISOString().slice(0,19).replace('T',' ');app.CustomFields2.Strings['3510c81b-045a-4aab-9c98-0cb0f7ea6850']=currentDateTime,app.IssueDate=currentDateTime.slice(0,10);const documentIssuedDateField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()==='Document Issued Date');if(documentIssuedDateField){const input=documentIssuedDateField.querySelector('input');input&&(input.value=currentDateTime,input.setAttribute('readonly','true'))}}},disableUpdateButtonValidStatus=()=>{if(isUpdate&&app?.CustomFields2?.Strings){const statusValue=app.CustomFields2.Strings['c43e2286-91c4-42fd-95f9-ddda74cd91fe']?.trim().toLowerCase(),lockedStatus=['submitted','valid','cancelled','rejected'];updateButton.disabled=lockedStatus.includes(statusValue)}};try{disableDateAndReference(),processCustomFields(),generateAutoDate(),disableUpdateButtonValidStatus()}catch(error){}document.getElementById('cfActions')?.remove()});</script></div>",
       "Position": 10,
       "Placement": [
         "ad12b60b-23bf-4421-94df-8be79cef533e",
@@ -76,7 +78,7 @@
     {
       "Key": "fc850086-767f-4cf7-a086-cde4208c68ce",
       "Name": "Public URL",
-      "Description": "<div id='cfActions'><script>document.addEventListener('DOMContentLoaded',function(){const isUpdate=document.querySelector('button.btn.btn-success[onclick=\"ajaxPost(true)\"]')!==null;const customFields=[{label:'WitholdingTax (T4) SubType',actions:['enabled','clear']},{label:'Submission ID',actions:['readonly','clear']},{label:'Submission Date',actions:['readonly','clear']},{label:'Document UUID',actions:['readonly','clear']},{label:'Document Issued Date',actions:['readonly','clear']},{label:'Document LongID',actions:['readonly','hide','clear']},{label:'Document Submission Status',actions:['readonly','clear']},{label:'Public URL',actions:['readonly','hide','clear']}];const disableDateAndReference=()=>{const dateInput=document.querySelector('.mx-input');if(dateInput){dateInput.disabled=true;const calendarIcon=document.querySelector('.mx-icon-calendar');if(calendarIcon){calendarIcon.style.pointerEvents='none';calendarIcon.style.opacity='0.5';}}const checkbox=document.querySelector('.input-group-addon input[type=\"checkbox\"]');const inputText=document.querySelector('.input-group input[type=\"text\"]');if(inputText.value!==''){if(checkbox&&inputText){try{if(typeof app!=='undefined'){app.AutomaticReference=false;}checkbox.checked=false;checkbox.disabled=true;inputText.disabled=true;}catch(error){}}}};const processCustomFields=()=>{if(!isUpdate&&app?.CustomFields2?.Strings){Object.keys(app.CustomFields2.Strings).forEach(uuid=>{app.CustomFields2.Strings[uuid]='';});}customFields.forEach(field=>{const customField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()===field.label);if(!customField)return;const input=customField.querySelector('input, textarea');if(!isUpdate&&field.actions.includes('clear')&&input)input.value='';if(field.actions.includes('readonly')&&input)input.setAttribute('readonly','true');if(field.actions.includes('hide'))customField.style.display='none';if(field.actions.includes('enabled')&&input)input.disabled=false;});};const generateAutoDate=()=>{if(!isUpdate&&app?.CustomFields2?.Strings){const now=new Date();const localDatetime=new Date(now.getTime()-(now.getTimezoneOffset()*60000));const currentDateTime=localDatetime.toISOString().slice(0,19).replace('T',' ');const issuedDateUuid='3510c81b-045a-4aab-9c98-0cb0f7ea6850';if(app.CustomFields2.Strings.hasOwnProperty(issuedDateUuid)){app.CustomFields2.Strings[issuedDateUuid]=currentDateTime;}const documentIssuedDateField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()==='Document Issued Date');if(documentIssuedDateField){const input=documentIssuedDateField.querySelector('input');if(input){input.value=currentDateTime;input.disabled=true;}}}};const disableUpdateButtonIfInvalidStatus=()=>{if(!isUpdate)return;const statusField=Array.from(document.querySelectorAll('.form-group')).find(group=>group.querySelector('label')?.textContent.trim()==='Document Submission Status');if(!statusField)return;const statusInput=statusField.querySelector('input, textarea');const updateButton=document.querySelector('button.btn.btn-success[onclick=\"ajaxPost(true)\"]');if(statusInput&&updateButton){const statusValue=statusInput.value.trim().toLowerCase();const invalidStatuses=['valid','canceled','rejected'];updateButton.disabled=invalidStatuses.includes(statusValue);}};try{disableDateAndReference();processCustomFields();generateAutoDate();disableUpdateButtonIfInvalidStatus();}catch(error){}const selfDeletingContainer=document.getElementById('cfActions');if(selfDeletingContainer){selfDeletingContainer.remove();}});</script></div>",
+      "Description": "",
       "Position": 11,
       "Placement": [
         "ad12b60b-23bf-4421-94df-8be79cef533e",
@@ -241,8 +243,7 @@
         "ec37c11e-2b67-49c6-8a58-6eccb7dd75ee",
         "6d2dc48d-2053-4e45-8330-285ebd431242"
       ],
-      "Size": "Medium",
-      "Description": ""
+      "Size": "Medium"
     },
     {
       "Key": "b826511f-0ba0-4aa3-b9c3-3e01b4283bb1",
@@ -298,7 +299,7 @@
       "UnitName": "LTR",
       "ValuationMethod": "WeightedAverageCost",
       "HasDefaultLineDescription": true,
-      "DefaultLineDescription": "rent pumps\nrent non-powered pump , compressing and/or transferring of a fuel. Includes products such as Siphon Pumps and Plunge Pumps used to increase the pressure in liquid fuel bottles",
+      "DefaultLineDescription": "rent pumps\nrent non-powered pump, compressing and/or transferring of a fuel.",
       "HasDefaultTaxCode": true,
       "DefaultTaxCode": "a3641b2d-13af-43e5-b4e4-5e5104c1d621",
       "CustomFields2": {
@@ -318,8 +319,8 @@
       "CustomFields2": {
         "Strings": {
           "7bde1ebe-9ba4-46a2-bd44-2d2d073ad9dd": "B — Business in Egypt",
-          "b516a467-8ba3-453a-b36d-248152cc6c68": "210236108",
-          "9dad7b5b-9c79-4128-afa2-eb497d643334": "شمال البحريه للبترول نوربيتكو",
+          "b516a467-8ba3-453a-b36d-248152cc6c68": "123456789",
+          "9dad7b5b-9c79-4128-afa2-eb497d643334": "Receiver Name or Company",
           "21dade2a-3ae4-4a9f-b5b0-8c0128bf0dae": "EG",
           "51977701-6caf-46e7-acc6-5c19659bb1b5": "القاهرة",
           "8bf3fbd4-1505-4f5c-b3ac-5aa5dbda0e00": "قسم البساتين",
@@ -340,6 +341,22 @@
       "Key": "96f2f394-8ac1-4e93-a926-5761ce8f0732",
       "WithholdingTaxReceivable": true,
       "WithholdingTaxPayable": true
+    }
+  ],
+  "sales-invoice-footer-form": [
+    {
+      "Key": "0c92f52a-84dd-4990-b3df-fd9b4d196c80",
+      "Name": "QRCode",
+      "Content": "<script src='resources/qrcode/qrcode.js'></script><script id='qrCodeScript'>document.onreadystatechange=function(){if(document.readyState=='complete'){const qrCodeContent='%%Public URL%%';function findNearestTable(element){while(element){if(element.tagName==='TABLE')return element;element=element.parentElement}return null}function insertQRCode(qrCodeContent){const qrCodeContainer=document.getElementById('qrCodeContainer'),qrCodeScript=document.getElementById('qrCodeScript');if(qrCodeContainer){qrCodeContainer.innerHTML='<div id=\"generatedQrCode\" style=\"padding: 20px\"></div>';renderQRCode(qrCodeContent,'generatedQrCode')}else if(qrCodeContent&&qrCodeContent.length>10){const nearestTable=findNearestTable(qrCodeScript);if(!nearestTable){console.error('Parent table not found for the QR code.');return}const newRow=nearestTable.insertRow(),newCell=newRow.insertCell();newCell.colSpan=99,newCell.innerHTML='<div id=\"generatedQrCode\" style=\"padding: 20px\"></div>',renderQRCode(qrCodeContent,'generatedQrCode')}qrCodeScript&&qrCodeScript.remove()}function renderQRCode(content,elementId){new QRCode(document.getElementById(elementId),{text:content,width:160,height:160,colorDark:'#000000',colorLight:'#fafafa',correctLevel:QRCode.CorrectLevel.L})}insertQRCode(qrCodeContent)}}</script>",
+      "Inactive": false
+    }
+  ],
+  "credit-note-footer-form": [
+    {
+      "Key": "f3083e3c-c6aa-4c65-bb48-0c9004965fc8",
+      "Name": "QrCode",
+      "Content": "<script src='resources/qrcode/qrcode.js'></script><script id='qrCodeScript'>document.onreadystatechange=function(){if(document.readyState=='complete'){const qrCodeContent='%%Public URL%%';function findNearestTable(element){while(element){if(element.tagName==='TABLE')return element;element=element.parentElement}return null}function insertQRCode(qrCodeContent){const qrCodeContainer=document.getElementById('qrCodeContainer'),qrCodeScript=document.getElementById('qrCodeScript');if(qrCodeContainer){qrCodeContainer.innerHTML='<div id=\"generatedQrCode\" style=\"padding: 20px\"></div>';renderQRCode(qrCodeContent,'generatedQrCode')}else if(qrCodeContent&&qrCodeContent.length>10){const nearestTable=findNearestTable(qrCodeScript);if(!nearestTable){console.error('Parent table not found for the QR code.');return}const newRow=nearestTable.insertRow(),newCell=newRow.insertCell();newCell.colSpan=99,newCell.innerHTML='<div id=\"generatedQrCode\" style=\"padding: 20px\"></div>',renderQRCode(qrCodeContent,'generatedQrCode')}qrCodeScript&&qrCodeScript.remove()}function renderQRCode(content,elementId){new QRCode(document.getElementById(elementId),{text:content,width:160,height:160,colorDark:'#000000',colorLight:'#fafafa',correctLevel:QRCode.CorrectLevel.L})}insertQRCode(qrCodeContent)}}</script>",
+      "Inactive": false
     }
   ]
 }

@@ -2,6 +2,7 @@
 using EgyptEGS.Exceptions;
 using EgyptEGS.Utilities;
 using Newtonsoft.Json;
+using EgyptEGS.ApiClient;
 
 namespace EgyptEGS.Models
 {
@@ -35,6 +36,8 @@ namespace EgyptEGS.Models
         public List<string> CNDNReferences { get; internal set; }
         public RelayData() { }
 
+        private List<string> validationErrors = new();
+
         public RelayData(Dictionary<string, string> formData)
         {
             if (formData == null)
@@ -44,7 +47,6 @@ namespace EgyptEGS.Models
 
             try
             {
-                List<string> validationErrors = new();
 
                 // Continue with existing initialization
                 Referrer = Utils.GetValue(formData, "Referrer");
@@ -65,6 +67,9 @@ namespace EgyptEGS.Models
                 string mergedJson = RelayDataHelper.GetJsonDataByGuid(Data, FormKey);
 
                 ManagerInvoice = JsonConvert.DeserializeObject<ManagerInvoice>(mergedJson);
+                ExchangeRate = ManagerInvoice.ExchangeRate;
+
+                ValidateItemCodesAndUnitType().GetAwaiter().GetResult();
 
                 if (string.IsNullOrEmpty(ManagerInvoice?.Reference))
                 {
@@ -86,8 +91,6 @@ namespace EgyptEGS.Models
                     throw new ValidationException("Required fields are missing", validationErrors);
                 }
 
-                ExchangeRate = ManagerInvoice.ExchangeRate;
-
 
 
                 InitializeInvoiceData(mergedJson);
@@ -104,7 +107,43 @@ namespace EgyptEGS.Models
                 throw new InvalidOperationException("Failed to initialize RelayData", ex);
             }
         }
+                private async Task ValidateItemCodesAndUnitType()
+        {
+            if (ManagerInvoice?.Lines == null) return;
 
+            using var httpClient = new HttpClient();
+            var codesHelper = new CodesHelper(httpClient, AppConfig.ClientId, AppConfig.ClientSecret, 
+                AppConfig.IntegrationType, Path.Combine("Data", "TaxPayerCodes", $"{AppConfig.Issuer.Id}.json"));
+
+            foreach (var line in ManagerInvoice.Lines)
+            {
+                string itemCode = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.ItemCodeGuid) ?? string.Empty;
+                string unitType = line.Item?.CustomFields2?.Strings?.GetValueOrDefault(ManagerCustomField.UnitTypeGuid) ??  line.Item?.UnitName ?? string.Empty;
+
+                if (string.IsNullOrEmpty(itemCode))
+                {
+                    validationErrors.Add("Item code is required for each line");
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(unitType))
+                {
+                    validationErrors.Add("Unit Type is required for each line");
+                    continue;
+                }
+
+                if (!UnitTypeReference.ValidateUnitType(unitType))
+                {
+                    validationErrors.Add($"Invalid Unit Type: {unitType} for item code: {itemCode}");
+                }
+
+                var codeValidation = await codesHelper.GetCodeUsageByItemCode(itemCode);
+                if (codeValidation == null)
+                {
+                    validationErrors.Add($"Invalid item code: {itemCode}");
+                }
+            }
+        }
         private void InitializeInvoiceData(string jsonInvoice)
         {
             if (string.IsNullOrEmpty(jsonInvoice))
@@ -120,7 +159,7 @@ namespace EgyptEGS.Models
 
                 if(string.IsNullOrEmpty(LocalIssueDate))
                 {
-                    ManagerInvoice.IssueDate.ToString("yyyy-MM-dd HH:mm:ss");
+                    LocalIssueDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 WHTSubType = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.WHTSubTypeGuid) ?? "W002";
@@ -140,8 +179,6 @@ namespace EgyptEGS.Models
                 InvoiceSummary.DocumentLogId = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DocumentLongIdGuid) ?? "";
                 InvoiceSummary.DocumentStatus = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DoucmentStatusGuid) ?? "";
                 InvoiceSummary.PublicUrl = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.PublicUrlGuid) ?? "";
-
-                List<string> validationErrors = new();
 
                 string receiverType = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.ReceiverTypeGuid, "InvoiceParty");
                 string receiverId = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.ReceiverIdGuid, "InvoiceParty");
@@ -248,7 +285,15 @@ namespace EgyptEGS.Models
                     DocumentType = "D";
                 }
 
-                CNDNReferences = new List<string> { ManagerInvoice.RefInvoice.Reference, ManagerInvoice.RefInvoice.IssueDate.ToString("yyyy-MM-dd"), InvoiceSummary.DocumentUUID};
+                var RefDocumentUUID = RelayDataHelper.GetStringCustomField2Value(jsonInvoice, ManagerCustomField.DocumentUUIDGuid, "RefInvoice") ?? "";
+
+                if (string.IsNullOrEmpty(RefDocumentUUID))
+                {
+                    throw new ValidationException("Missing Document References (Document UUID) from Debited/Credited Invoice.", validationErrors);
+                }
+
+                CNDNReferences = new List<string> { RefDocumentUUID };
+
             }
         }
         public ApprovedInvoiceViewModel GetApprovedInvoiceViewModel()
@@ -280,6 +325,7 @@ namespace EgyptEGS.Models
             viewModel.DocumentType = DocumentType;
             viewModel.DocumentTypeVersion = DocumentTypeVersion;
 
+            viewModel.DocumentReferences = CNDNReferences;
             //Client local time
             viewModel.IssueDate = LocalIssueDate;
 
