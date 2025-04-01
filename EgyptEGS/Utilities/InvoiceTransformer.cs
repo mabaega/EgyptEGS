@@ -52,6 +52,35 @@ namespace EgyptEGS.Utilities
                 InvoiceLines = TransformInvoiceLines(relayData)
             };
 
+            // Validate tax types and their subtypes
+            var validationErrors = new List<string>();
+
+            foreach (var line in egyptianInvoice.InvoiceLines)
+            {
+                foreach (var tax in line.TaxableItems)
+                {
+                    // First check if TaxType exists
+                    var validTaxTypes = TaxTypeReference.GetValidTaxTypes();
+
+                    if (!validTaxTypes.Contains(tax.TaxType))
+                    {
+                        validationErrors.Add($"Invalid tax type: {tax.TaxType} for Item {line.ItemCode}");
+                        continue;
+                    }
+
+                    // If TaxType is valid, check if SubType is valid for this TaxType
+                    if (!TaxTypeReference.IsValidSubTypeForTaxType(tax.TaxType, tax.SubType))
+                    {
+                        validationErrors.Add($"Invalid sub type: {tax.SubType} for tax type: {tax.TaxType} for Item {line.ItemCode}");
+                    }
+                }
+            }
+
+            if (validationErrors.Count > 0)
+            {
+                throw new ValidationException("Tax validation errors", validationErrors);
+            }
+
             if (!relayData.DocumentType.Equals("I", StringComparison.CurrentCultureIgnoreCase))
             {
                 egyptianInvoice.References = relayData.CNDNReferences;
@@ -219,7 +248,7 @@ namespace EgyptEGS.Utilities
                     decimal taxAmount = 0;
 
                     // Calculate tax amount based on type
-                    switch (taxType)
+                    switch (taxType.ToUpper())
                     {
                         case "T3": // Fixed Amount Table Tax
                         case "T6": // Fixed Amount Stamping Tax
@@ -259,8 +288,8 @@ namespace EgyptEGS.Utilities
                     {
                         taxableItems.Add(new TaxableItem
                         {
-                            TaxType = taxType,
-                            SubType = subType,
+                            TaxType = taxType.ToUpper(),
+                            SubType = subType.ToUpper(),
                             Amount = Math.Abs(taxAmount),
                             Rate = rate,
                             IsNegatif = component.ComponentRate < 0

@@ -20,7 +20,7 @@ namespace EgyptEGS.Models
 
         public string DocumentType { get; private set; } = "I";
         public string LocalIssueDate { get; private set; }
-        public string DocumentTypeVersion { get; private set; } = "0.9";
+        public string DocumentTypeVersion { get; private set; } = "1.0";
         public string WHTSubType { get; private set; } = "W002";
 
 

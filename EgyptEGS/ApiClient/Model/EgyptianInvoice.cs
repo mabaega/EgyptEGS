@@ -160,7 +160,7 @@ namespace EgyptEGS.ApiClient.Model
     public class TaxableItem
     {
         [JsonProperty("taxType")]
-        public string TaxType { get; set; }  // Kode pajak (contoh: "VAT")
+        public string TaxType { get; set; } 
 
         [JsonProperty("amount")]
         public decimal Amount { get; set; }

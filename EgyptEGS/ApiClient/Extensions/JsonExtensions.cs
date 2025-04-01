@@ -5,29 +5,6 @@ using System.Text.RegularExpressions;
 public static class JsonExtensions
 {
 
-    public static (string, byte[]) CalucateHash(string jsonString)
-    {
-        try
-        {
-            JsonNode jNode = JsonNode.Parse(jsonString);
-            string serializedData = SerializeJsonNode(jNode);
-
-            byte[] dataToSign = Encoding.UTF8.GetBytes(serializedData);
-
-            // Calculate SHA256 hash
-            byte[] hash;
-            using (System.Security.Cryptography.SHA256 sha256 = System.Security.Cryptography.SHA256.Create())
-            {
-                hash = sha256.ComputeHash(dataToSign);
-            }
-            return (serializedData, hash);
-        }
-        catch (Exception ex)
-        {
-            throw new ArgumentException("Invalid JSON format", nameof(jsonString), ex);
-        }
-    }
-
     public static string SerializeJsonNode(JsonNode documentStructure)
     {
         // If it's a simple value type

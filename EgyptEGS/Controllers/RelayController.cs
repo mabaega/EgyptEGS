@@ -7,6 +7,7 @@ using EgyptEGS.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using EgyptEGS.SignerService;
 
 namespace EgyptEGS.Controllers
 {
@@ -80,6 +81,18 @@ namespace EgyptEGS.Controllers
 
                 relayData.EgyptianInvoiceJson = EgyptianInvoiceJson;
                 relayData.SerializedInvoice = SerializedInvoice;
+
+                var signer = new DocumentSigner(@"SignerService\test_cert.pfx", "test123");
+                var signature = signer.SignDocument(relayData.SerializedInvoice);
+
+                _logger.LogInformation("Generated Signature Length: {Length}", signature?.Length ?? 0);
+                
+                EgyptianInvoiceJson = EgyptianInvoiceJson.TrimEnd('}') +
+                        $",\"signatures\":[{{\"signatureType\":\"I\",\"value\":\"{signature}\"}}]}}";
+                
+                string wrappedJson = $"{{\"documents\":[{EgyptianInvoiceJson}]}}";
+                
+                _logger.LogInformation("Signature: {Payload}", wrappedJson);
 
                 RelayDataViewModel viewModel = relayData.GetRelayDataViewModel();
 
