@@ -363,3 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 /CadesBesSignature/CadesBesSignature.csproj
 /ConsoleApp1/ConsoleApp1.csproj
+/SignService/SignService.csproj
+/SignServices/SignServices.csproj
+/EgyptEGS/Utilities/ParseCertificate
+/EgyptEGS/Utilities/InvoiceTransformer copy.cs
