@@ -367,3 +367,9 @@ FodyWeavers.xsd
 /SignServices/SignServices.csproj
 /EgyptEGS/Utilities/ParseCertificate
 /EgyptEGS/Utilities/InvoiceTransformer copy.cs
+/EgyptEGS/SignerService/test_private.key
+/EgyptEGS/SignerService/test_cert.csr
+/EgyptEGS/SignerService/test_cert.crt
+/EgyptEGS/SignerService/test_cert.cnf
+/EgyptEGS/SignerService/TokenSigner.cs
+/EgyptEGS/SignerService/SignatureAnalyzer.cs
